@@ -1,7 +1,3 @@
-// import setImmediate from "./setImmediate.js"
-
-
-
 document.body.addEventListener('click', async evt => {
     console.log(
         checkForSelectedItem(evt.target)
@@ -417,7 +413,6 @@ window.DCL = Component;
 export default Component;
 export let setContext = Component.setContext.bind(Component);
 export let getContext = Component.getContext.bind(Component);
-export let monitorContext = Component.monitorContext.bind(Component);
 export let onEvent = Component.onEvent.bind(Component);
 export let offEvent = Component.offEvent.bind(Component);
 export let emitEvent = Component.emitEvent.bind(Component);
