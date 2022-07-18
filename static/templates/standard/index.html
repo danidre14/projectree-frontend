@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <!--project_title-->
+  </title>
+  <script src="libs/twind.umd.js"></script>
+  <!-- <script src="libs/observe.umd.js"></script>
+  <script src="libs/shim.umd.js"></script> -->
+  <script>
+    const tw = twind.tw;
+  </script>
+</head>
+
+<body>
+  <div id="view"></div>
+  <script>
+    window.onload = function () {
+      let projectree = { "project_title": "Danidre Project List", "project_favicon": "", "project_theme": "standard", "project_items": [{ "project_name": "10 Minute Endpoint", "project_description": "10 Minute Endpoint is an open-source service that generates a temporary endpoint for a developer to test and inspect HTTP requests sent to it.", "project_languages": "NodeJS, Express, Linode, BulmaCSS, Prisma, MongoDB", "project_photo": "https://blog.danidre.com/_next/image?url=https%3A%2F%2Fcdn.hashnode.com%2Fres%2Fhashnode%2Fimage%2Fupload%2Fv1656352740377%2FnM2eBH-SE.png%3Fw%3D1600%26h%3D840%26fit%3Dcrop%26crop%3Dentropy%26auto%3Dcompress%2Cformat%26format%3Dwebp&w=1920&q=75", "project_link": "https://10minuteendpoint.net/", "project_source": "https://github.com/danidre14/10-minute-endpoint-nodejs/", "project_year": "June, 2022" }, { "project_name": "FlevaR Editor", "project_description": "The visual editor for the FlevaR browser-based javaScript game engine. Easily create javascript games and applications. ", "project_languages": "HTML, CSS, JavaScript", "project_photo": "https://flevar.com/images/hero-images/home-hero-image.jpg", "project_link": "https://flevar.com/", "project_source": "", "project_year": "" }] }
+
+      // projectree = {};
+
+      let html = `
+<header>
+  <div class="${tw`flex h-96 items-center justify-center font-bold bg-purple-700 text-white`}">
+    <h1 class="${tw`text-5xl text-center`}">${projectree.project_title}</h1>
+  </div>
+</header>
+<main class="${tw`container flex-grow mx-auto`}">
+                ${projectree.project_items.reduce((prevResult, currElement) => {
+        const {
+          project_name, project_description, project_languages, project_photo, project_link, project_source, project_year
+        } = currElement;
+        return `${prevResult}
+  <section class="${tw`my-8 grid grid-cols-2 gap-4 p-4`}">
+    <div class="${tw`relative`}">
+      <div class="${tw`flex h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
+          <img class="${tw`w-full rounded-xl`}" src="${project_photo}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" onerror="console.log(event)" />
+      </div>
+      <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
+        ${project_source ? `
+        <div class="${tw`overflow-hidden rounded-full`}">
+          <a target="_blank" href="${project_source}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+          </a>
+        </div>
+        ` : ""}
+        ${project_link ? `
+        <div class="${tw`overflow-hidden rounded-full`}">
+          <a target="_blank" href="${project_link}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+          </a>
+        </div>
+        ` : ""}
+      </div>
+    </div>
+    <div class="${tw`flex flex-col`}">
+      <h2 class="${tw`mb-2 text-3xl font-semibold`}">${project_name}</h2>
+      <p class="${tw`mb-3 text-right text-sm`}">${project_year}</p>
+      <p class="${tw`flex-grow`}">${project_description}</p>
+      <div class="${tw`flex flex-wrap gap-2 p-2`}">
+        ${project_languages.split(",").reduce((prevResult, currElement) => {
+          return `${prevResult}
+        <span class="${tw`inline-flex items-center gap-2 rounded-full bg-blue-300 p-1 pr-2`}">
+          <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
+          <span class="${tw`text-xs`}">${currElement}</span>
+        </span>    
+            `;
+        }, "")}
+      </div>
+    </div>
+  </section>`
+      }, "")}
+</main>
+<footer class="${tw`bg-purple-700 font-semibold text-white px-4`}">
+  <div class="${tw`container mx-auto flex h-20 items-center justify-between`}">
+    <p class="${tw`text-lg`}">Designed by <a class="${tw`underline text-purple-200 visited:text-purple-300`}" href="#project-tree">Projectree</a></p>
+    <p class="${tw`text-lg`}">${projectree.project_title}</p>
+  </div>
+</footer>
+
+`;
+      const view = document.getElementById("view");
+      view.innerHTML = html;
+      view.classList = tw`flex h-screen flex-col`;
+      document.title = projectree.project_title;
+    }
+  </script>
+</body>
+
+</html>
