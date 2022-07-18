@@ -1,14 +1,11 @@
 document.body.addEventListener('click', async evt => {
-    console.log(
-        checkForSelectedItem(evt.target)
-    )
+    checkForSelectedItem(evt.target)
 });
 
 const selectedElementTypes = `textarea, input[type="text"]`;
 function checkForSelectedItem(target) {
     const elem = createXPathFromElement(target);
     if (target && target.matches(selectedElementTypes)) {
-        // if (["textarea", "input"].includes(target && target.tagName.toLowerCase())) {
         Component.selectedElement = {
             path: elem,
             start: target.selectionStart || 0,
@@ -22,7 +19,6 @@ function checkForSelectedItem(target) {
             end: 0
         };
     }
-    console.log(elem)
     return elem;
 }
 
