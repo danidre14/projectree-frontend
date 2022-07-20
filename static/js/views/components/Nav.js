@@ -33,8 +33,8 @@ export default class Nav extends DCL {
     <div class="${tw`container mx-auto flex items-center justify-between`}">
     <div>
         ${await new Link(
-            `<img class="${tw`mr-2 h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
-            <span class="${tw`hidden text-2xl sm:inline`}">Projectree</span>`,
+            `<img class="${tw`h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
+            <span class="${tw`hidden text-2xl sm:inline`}">rojectree</span>`,
         { to: "/", class: tw`flex flex-wrap items-center` }).mount(this)}
     </div>
     <div class="${tw`hidden sm:block`}">user@email.com</div>
@@ -51,8 +51,8 @@ export default class Nav extends DCL {
     <div class="${tw`container mx-auto flex items-center justify-between`}">
     <div>
         ${await new Link(
-            `<img class="${tw`mr-2 h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
-            <span class="${tw`hidden text-2xl sm:inline`}">Projectree</span>`,
+            `<img class="${tw`h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
+            <span class="${tw`hidden text-2xl sm:inline`}">rojectree</span>`,
         { to: "/", class: tw`flex flex-wrap items-center` }).mount(this)}
     </div>
     <div class="${tw`flex flex-grow-0 flex-wrap items-center justify-end gap-2`}">
