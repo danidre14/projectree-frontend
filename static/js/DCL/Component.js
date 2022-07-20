@@ -373,6 +373,12 @@ class Component {
             this.contextBus[key] = [];
         }
         this.contextBus[key].push([callback, target, ...args]);
+
+        const value = this.context[key];
+        callback(value, ...args);
+        try {
+            target._rerender();
+        } catch { }
     }
     static offContext(key, callback, target) {
         if (!Array.isArray(this.contextBus[key])) return;

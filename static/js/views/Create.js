@@ -1,4 +1,4 @@
-import DCL, { Button, Link, Loader } from "../DCL/core.js";
+import DCL, { Button, Link, Loader, getContext, triggerFunc } from "../DCL/core.js";
 
 import generateZippedProjectree from "../utils/generateProjectree.js";
 
@@ -7,25 +7,72 @@ export default class Create extends DCL {
         super(props);
 
         this.state = {
-            project_title: "",
-            project_favicon: "",
-            project_theme: "standard",
-            project_items: [],
-            // project_name: "",
-            // project_description: "",
-            // project_languages: "",
-            // project_photo: "",
-            // project_link: "",
-            // project_source: "",
-            // project_year: ""
+    "project_title": "Welcome to my ProjecTree",
+    "project_favicon": "/static/images/projectree-logo-primary.png",
+    "project_theme": "standard",
+    "project_items": [
+        {
+            "project_name": "Project 1",
+            "project_description": "This project is super cool bleh",
+            "project_languages": "html, css, js, mongodb",
+            "project_photo": "/link/to/photo/here",
+            "project_link": "",
+            "project_source": "",
+            "project_year": ""
+        },
+        {
+            "project_name": "Cool project 2",
+            "project_description": "foo bar",
+            "project_languages": "nodejs, python",
+            "project_photo": "",
+            "project_link": "/demo/link/here",
+            "project_source": "",
+            "project_year": ""
+        }
+    ],
         }
     }
 
     async onMount() {
-        // const hi = this.setState("count", this.state.count + 5);
-        // await window.asyncWait(1000);
+        this.loggedIn = getContext("loggedIn");
 
-        // DCL.triggerFunc(hi);
+        const state = {
+            project_title: "",
+            project_favicon: "",
+            project_theme: "standard",
+            project_items: [],
+        }
+        if (!this.loggedIn) {
+            const data = localStorage.getItem("loggedOutCreateProjectreeState");
+
+            if (data) {
+                const localState = JSON.parse(data);
+                state.project_title = localState.project_title;
+                state.project_favicon = localState.project_favicon;
+                state.project_theme = localState.project_theme;
+                state.project_items = localState.project_items;
+            }
+        }
+
+        triggerFunc(this.setState((prevState) => {
+            const newState = { ...prevState, ...state };
+            return newState
+        }));
+    }
+
+    async onUnmount() {
+
+        if (!this.loggedIn) {
+            const state = this.state;
+            const localState = {
+                project_title: state.project_title,
+                project_favicon: state.project_favicon,
+                project_theme: state.project_theme,
+                project_items: state.project_items
+            }
+            const data = JSON.stringify(localState);
+            localStorage.setItem("loggedOutCreateProjectreeState", data);
+        }
     }
 
     async render() {
@@ -177,7 +224,7 @@ export default class Create extends DCL {
                             <div
                                 class="${tw`flex w-12 items-center justify-center border-r border-neutral-300 bg-neutral-200`}">
                                 <img id="projectree_favicon_preview" class="${tw`h-7 w-7`}"
-                                    src="https://10minuteendpoint.net/icons/10me-logo-primary.png" alt="logo" />
+                                    src="/static/images/projectree-logo-primary.png" alt="logo" />
                             </div>
                             <input type="text" id="projectree_favicon" name="project_favicon"
                                 class="${tw`w-full bg-white py-1 px-1 text-xl outline-none focus:bg-gray-50`}"

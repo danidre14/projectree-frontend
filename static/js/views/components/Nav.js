@@ -13,7 +13,6 @@ export default class Nav extends DCL {
         await super.onMount();
         
         this.monitorContext("loggedIn", (value) => {
-            // DCL.triggerFunc(this.setState("loggedIn", this.state.count + 5));
             this.props.loggedIn = value;
         });
 
@@ -34,7 +33,7 @@ export default class Nav extends DCL {
     <div class="${tw`container mx-auto flex items-center justify-between`}">
     <div>
         ${await new Link(
-            `<img class="${tw`mr-2 h-10 w-10`}" src="https://10minuteendpoint.net/icons/10me-logo-primary.png" alt="logo" />
+            `<img class="${tw`mr-2 h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
             <span class="${tw`hidden text-2xl sm:inline`}">Projectree</span>`,
         { to: "/", class: tw`flex flex-wrap items-center` }).mount(this)}
     </div>
@@ -52,7 +51,7 @@ export default class Nav extends DCL {
     <div class="${tw`container mx-auto flex items-center justify-between`}">
     <div>
         ${await new Link(
-            `<img class="${tw`mr-2 h-10 w-10`}" src="https://10minuteendpoint.net/icons/10me-logo-primary.png" alt="logo" />
+            `<img class="${tw`mr-2 h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
             <span class="${tw`hidden text-2xl sm:inline`}">Projectree</span>`,
         { to: "/", class: tw`flex flex-wrap items-center` }).mount(this)}
     </div>
