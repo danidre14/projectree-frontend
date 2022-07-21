@@ -1,9 +1,14 @@
-import DCL, { Button, Link, Loader } from "../DCL/core.js";
+import DCL, { Button, Link, ignoreRoute, getContext } from "../DCL/core.js";
 
 export default class Dashboard extends DCL {
     constructor(props) {
         super(props);
         this.setTitle("Dashboard");
+
+        this.loggedIn = getContext("loggedIn");
+        if (!this.loggedIn) {
+            ignoreRoute();
+        }
 
         this.state = {
             projectrees: [
@@ -11,6 +16,7 @@ export default class Dashboard extends DCL {
                 { id: 1, name: "Project 1", modifiedAt: "20/07/2021 11:23 pm" }
             ]
         }
+
     }
 
     async onMount() {

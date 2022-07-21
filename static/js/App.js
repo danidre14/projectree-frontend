@@ -1,10 +1,12 @@
-import DCL, { Router, Link } from "./DCL/core.js";
+import DCL, { Router, Link, setContext } from "./DCL/core.js";
 import Footer from "./views/components/Footer.js";
 import Nav from "./views/components/Nav.js";
 
 export default class App extends DCL {
     constructor(props) {
         super(props);
+
+        setContext("loggedIn", false);
 
         this.state = {
 
@@ -22,7 +24,14 @@ export default class App extends DCL {
                 {
                     path: "/create",
                     title: "Create",
-                    view: async() => await import("./views/Create.js")
+                    view: async() => await import("./views/Create.js"),
+                    props: { editing: false }
+                },
+                {
+                    path: "/edit/:id",
+                    title: "Edit",
+                    view: async() => await import("./views/Create.js"),
+                    props: { editing: true }
                 },
                 {
                     path: "/signin",

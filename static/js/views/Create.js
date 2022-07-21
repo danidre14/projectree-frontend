@@ -1,4 +1,4 @@
-import DCL, { Button, Link, Loader, getContext, triggerFunc } from "../DCL/core.js";
+import DCL, { Button, Link, ignoreRoute, getContext, triggerFunc } from "../DCL/core.js";
 
 import generateZippedProjectree from "../utils/generateProjectree.js";
 
@@ -6,30 +6,37 @@ export default class Create extends DCL {
     constructor(props) {
         super(props);
 
-        this.state = {
-    "project_title": "Welcome to my ProjecTree",
-    "project_favicon": "/static/images/projectree-logo-primary.png",
-    "project_theme": "standard",
-    "project_items": [
-        {
-            "project_name": "Project 1",
-            "project_description": "This project is super cool bleh",
-            "project_languages": "html, css, js, mongodb",
-            "project_photo": "/link/to/photo/here",
-            "project_link": "",
-            "project_source": "",
-            "project_year": ""
-        },
-        {
-            "project_name": "Cool project 2",
-            "project_description": "foo bar",
-            "project_languages": "nodejs, python",
-            "project_photo": "",
-            "project_link": "/demo/link/here",
-            "project_source": "",
-            "project_year": ""
-        }
-    ],
+        this.loggedIn = getContext("loggedIn");
+
+        if (props.editing && !this.loggedIn)
+            ignoreRoute();
+
+
+        this.state = {}
+        const s = {
+            "project_title": "Welcome to my ProjecTree",
+            "project_favicon": "/static/images/projectree-logo-primary.png",
+            "project_theme": "standard",
+            "project_items": [
+                {
+                    "project_name": "Project 1",
+                    "project_description": "This project is super cool bleh",
+                    "project_languages": "html, css, js, mongodb",
+                    "project_photo": "/link/to/photo/here",
+                    "project_link": "",
+                    "project_source": "",
+                    "project_year": ""
+                },
+                {
+                    "project_name": "Cool project 2",
+                    "project_description": "foo bar",
+                    "project_languages": "nodejs, python",
+                    "project_photo": "",
+                    "project_link": "/demo/link/here",
+                    "project_source": "",
+                    "project_year": ""
+                }
+            ],
         }
     }
 
@@ -118,11 +125,12 @@ export default class Create extends DCL {
         });
 
         let projectItems = "";
-        for (let i = 0; i < this.state.project_items.length; i++) {
-            const projNum = i + 1;
-            const project = this.state.project_items[i];
-            projectItems +=
-                `<div class="${tw`my-12`}">
+        if (this.state.project_items)
+            for (let i = 0; i < this.state.project_items.length; i++) {
+                const projNum = i + 1;
+                const project = this.state.project_items[i];
+                projectItems +=
+                    `<div class="${tw`my-12`}">
             <div class="${tw`flex items-end justify-between px-4 pb-4`}">
                 <span class="${tw`text-4xl`}">Project ${projNum}</span>
                 ${await new Button(`
@@ -185,7 +193,7 @@ export default class Create extends DCL {
             </div>
         </div>`
 
-        }
+            }
 
         return (
             // ${await new Button("Click me", { onClick: setBatchedItem }).mount(this)}

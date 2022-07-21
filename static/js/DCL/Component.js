@@ -2,7 +2,7 @@ document.body.addEventListener('click', async evt => {
     checkForSelectedItem(evt.target)
 });
 
-const selectedElementTypes = `textarea, input[type="text"]`;
+const selectedElementTypes = `textarea, input[type="text"], input[type="password"]`;
 function checkForSelectedItem(target) {
     const elem = createXPathFromElement(target);
     if (target && target.matches(selectedElementTypes)) {
@@ -129,8 +129,7 @@ class Component {
         this.init();
     }
 
-    init() {
-    }
+    init() {}
 
     setTitle(title) {
         document.title = title;
@@ -158,15 +157,17 @@ class Component {
                     }
                 } catch (e) { }
             } else {
-                const prevState = JSON.parse(JSON.stringify(this.state[key]));
+                const prevState = JSON.parse(JSON.stringify(this.state[key] || {}));
                 this.state[key] = typeof state === "function" ? await state(prevState, event) : state;
             }
             const newStateSignature = JSON.stringify(this.state);
-            if (prevStateSignature !== newStateSignature)
+            if (prevStateSignature !== newStateSignature) {
+                console.log(this.state.registration)
                 setTimeout(async () => {
                     checkForSelectedItem(document.activeElement);
                     this._rerender();
                 }, 100)
+            }
         }
 
         this._refs.stateFuncIDs.push(funcID);
@@ -349,6 +350,9 @@ class Component {
     static navigateTo(url) {
         this.emitEvent("navigateTo", url);
     }
+    static ignoreRoute() {
+        this.emitEvent("ignoreRoute");
+    }
 
     static onEvent(event, callback) {
         if (!Array.isArray(this.eventBus[event])) {
@@ -424,6 +428,7 @@ export let onEvent = Component.onEvent.bind(Component);
 export let offEvent = Component.offEvent.bind(Component);
 export let emitEvent = Component.emitEvent.bind(Component);
 export let navigateTo = Component.navigateTo.bind(Component);
+export let ignoreRoute = Component.ignoreRoute.bind(Component);
 export let useParams = Component.useParams.bind(Component);
 export let useQuery = Component.useQuery.bind(Component);
 export let triggerFunc = Component.triggerFunc.bind(Component);

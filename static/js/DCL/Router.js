@@ -19,12 +19,14 @@ export default class Router extends DCL {
         await super.onMount();
 
         DCL.onEvent("navigateTo", this.navigateTo);
+        DCL.onEvent("ignoreRoute", this._goTo404);
     }
 
     async onUnmount() {
         await super.onUnmount();
 
-        DCL.off("navigateTo", this.navigateTo);
+        DCL.offEvent("navigateTo", this.navigateTo);
+        DCL.offEvent("ignoreRoute", this._goTo404);
     }
 
     navigateTo = async url => {
@@ -77,6 +79,7 @@ export default class Router extends DCL {
         }
 
         const loading = await this._getLoadingView(match);
+        const props = match.route.props;
 
         const params = this.getParams(match);
         const query = this.getQuery(location.search);
@@ -85,8 +88,8 @@ export default class Router extends DCL {
         DCL.query = query;
 
         this.view = loading.default ?
-            new loading.default({ params }) :
-            new loading.view({ params });
+            new loading.default({ ...props, params, query }) :
+            new loading.view({ ...props, params, query });
 
         if (match.route.title) {
             document.title = match.route.title;
@@ -96,6 +99,33 @@ export default class Router extends DCL {
         return await this._rerender();
     };
 
+    _goTo404 = async () => {
+        const match = {
+            route: this.defaultRoute,
+            result: [location.pathname]
+        }
+
+        const loading = await this._getLoadingView(match);
+        const props = match.route.props;
+
+        const params = this.getParams(match);
+        const query = this.getQuery(location.search);
+
+        DCL.params = params;
+        DCL.query = query;
+
+        this.view = loading.default ?
+            new loading.default({ ...props, params, query }) :
+            new loading.view({ ...props, params, query });
+
+        if (match.route.title) {
+            document.title = match.route.title;
+            this.setActiveRouteOnElement(match);
+        }
+
+        return await this._rerender();
+    }
+
     async render() {
         if (this.view === null) return "";
 
@@ -103,7 +133,7 @@ export default class Router extends DCL {
         const style = this.style ? `style="${this.style}"` : "";
         const classList = this.class ? `class="${this.class}"` : "";
 
-        const content = await this.view.mount(this);
+        const content = (this.view.mount && typeof this.view.mount === "function") ? await this.view.mount(this) : "";
 
         const view = `<div
         ${id}
@@ -140,7 +170,7 @@ export default class Router extends DCL {
         }));
     };
 
-    getParams = searchParams => {
+    getQuery = searchParams => {
         const urlSearchParams = new URLSearchParams(searchParams);
         const query = Object.fromEntries(urlSearchParams.entries());
         return query;

@@ -1,11 +1,11 @@
-import DCL, { Link, Button, setContext, navigateTo } from "../../DCL/core.js";
+import DCL, { Link, Button, setContext, getContext, navigateTo } from "../../DCL/core.js";
 
 
 export default class Nav extends DCL {
     constructor(props) {
         super(props);
 
-        this.props.loggedIn = setContext("loggedIn", false);
+        this.props.loggedIn = getContext("loggedIn");
 
     }
 

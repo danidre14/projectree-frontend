@@ -1,9 +1,14 @@
-import DCL, { Button, Link, Loader, setContext, navigateTo } from "../DCL/core.js";
+import DCL, { Button, Link, getContext, setContext, navigateTo } from "../DCL/core.js";
 
 export default class Dashboard extends DCL {
 	constructor(props) {
 		super(props);
 		this.setTitle("Sign In");
+		
+        this.loggedIn = getContext("loggedIn");
+        if(this.loggedIn) {
+            navigateTo("/dashboard");
+        }
 
 		this.state = {
 			username: "",
@@ -42,11 +47,11 @@ export default class Dashboard extends DCL {
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="username" class="${tw`text-xl italic text-neutral-600`}">Username</label>
-					<input oninput="${setLoginState}" type="text" autocomplete="username" id="username" class="${tw`rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}" name="username" value="${this.state.username}" />
+					<input onchange="${setLoginState}" type="text" autocomplete="username" id="username" class="${tw`rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}" name="username" value="${this.state.username}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="password" class="${tw`text-xl italic text-neutral-600`}">Password</label>
-					<input oninput="${setLoginState}" type="password" autocomplete="current-password" id="password" class="${tw`rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}" name="password" value="${this.state.password}" />
+					<input onchange="${setLoginState}" type="password" autocomplete="current-password" id="password" class="${tw`rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}" name="password" value="${this.state.password}" />
 				</div>
 			</div>
 		</div>
@@ -64,5 +69,5 @@ export default class Dashboard extends DCL {
 
 function attemptSignIn() {
 	setContext("loggedIn", true);
-	navigateTo("/");
+	navigateTo("/dashboard");
 }
