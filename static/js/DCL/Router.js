@@ -14,10 +14,10 @@ export default class Router extends DCL {
         this.init(props.routes);
 
     }
-    
+
     async onMount() {
         await super.onMount();
-        
+
         DCL.onEvent("navigateTo", this.navigateTo);
     }
 
@@ -31,7 +31,8 @@ export default class Router extends DCL {
         try {
             history.pushState(null, null, url);
             await this.run();
-        } catch {
+        } catch (e) {
+            console.log(e);
             window.open(url, "_blank").focus();
         }
     };
@@ -78,8 +79,10 @@ export default class Router extends DCL {
         const loading = await this._getLoadingView(match);
 
         const params = this.getParams(match);
+        const query = this.getQuery(location.search);
 
         DCL.params = params;
+        DCL.query = query;
 
         this.view = loading.default ?
             new loading.default({ params }) :
@@ -135,6 +138,12 @@ export default class Router extends DCL {
         return Object.fromEntries(keys.map((key, i) => {
             return [key, values[i]];
         }));
+    };
+
+    getParams = searchParams => {
+        const urlSearchParams = new URLSearchParams(searchParams);
+        const query = Object.fromEntries(urlSearchParams.entries());
+        return query;
     };
 
     _getLoadingView = async (match) => typeof match.route.view === "function" ?

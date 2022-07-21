@@ -111,6 +111,7 @@ class Component {
         this.props = props;
         this.state = {};
         this.params = props.params || {};
+        this.query = props.query || {};
         this.dclName = `dcl-${this.constructor.name.toLowerCase()}`;
         this.dclId = `${this.dclName.substring(4)}_${this._generateUID()}`;
         this._refs = {
@@ -324,6 +325,7 @@ class Component {
     static setStatePool = {};
     static createFuncPool = {};
     static params = {};
+    static query = {};
     static selectedElement = {
         target: null,
         start: 0,
@@ -331,6 +333,9 @@ class Component {
     };
     static useParams() {
         return this.params;
+    }
+    static useQuery() {
+        return this.query;
     }
 
     static triggerFunc(funcCall = "", ...args) {
@@ -420,4 +425,5 @@ export let offEvent = Component.offEvent.bind(Component);
 export let emitEvent = Component.emitEvent.bind(Component);
 export let navigateTo = Component.navigateTo.bind(Component);
 export let useParams = Component.useParams.bind(Component);
+export let useQuery = Component.useQuery.bind(Component);
 export let triggerFunc = Component.triggerFunc.bind(Component);

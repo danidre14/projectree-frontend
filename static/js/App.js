@@ -30,6 +30,11 @@ export default class App extends DCL {
                     view: async() => await import("./views/SignIn.js")
                 },
                 {
+                    path: "/signup",
+                    title: "Sign Up",
+                    view: async() => await import("./views/SignUp.js")
+                },
+                {
                     path: "/dashboard",
                     title: "Dashboard",
                     view: async() => await import("./views/Dashboard.js")
