@@ -129,7 +129,7 @@ class Component {
         this.init();
     }
 
-    init() {}
+    init() { }
 
     setTitle(title) {
         document.title = title;
@@ -374,6 +374,30 @@ class Component {
         }
     }
 
+    static _confirmNavigate() {
+        const eventName = "beforeNavigate";
+        if (!this.eventBus[eventName]) return false;
+
+        let confirmNavigate = false;
+        const event = {
+            preventDefault() {
+                confirmNavigate = true;
+            }
+        }
+        try {
+            const beforeNavigateEvents = this.eventBus[eventName];
+            for (let i = 0; i < beforeNavigateEvents.length; i++) {
+                const callback = beforeNavigateEvents[i];
+                callback(event);
+                if (confirmNavigate || event.returnValue) return true;
+            }
+            return false;
+        } catch (e) {
+            console.warn("Error confirming navigate", e)
+            return false;
+        }
+    }
+
 
     static context = {};
     static contextBus = {};
@@ -399,8 +423,14 @@ class Component {
             this.contextBus[key].splice(index, 1);
         }
     }
+    static getContext(key) {
+        return this.context[key];
+    }
     static setContext(key, value) {
-        this.context[key] = value;
+        if (value === undefined)
+            delete this.context[key];
+        else
+            this.context[key] = value;
 
         if (!this.contextBus[key]) return value;
 
@@ -413,8 +443,17 @@ class Component {
 
         return value;
     }
-    static getContext(key) {
-        return this.context[key];
+    static clearContext(key) {
+        delete this.context[key];
+
+        if (!this.contextBus[key]) return;
+
+        this.contextBus[key].forEach(([callback, target, ...args]) => {
+            callback(undefined, ...args);
+            try {
+                target._rerender();
+            } catch { }
+        });
     }
 
 }
@@ -422,8 +461,9 @@ class Component {
 window.DCL = Component;
 
 export default Component;
-export let setContext = Component.setContext.bind(Component);
 export let getContext = Component.getContext.bind(Component);
+export let setContext = Component.setContext.bind(Component);
+export let clearContext = Component.clearContext.bind(Component);
 export let onEvent = Component.onEvent.bind(Component);
 export let offEvent = Component.offEvent.bind(Component);
 export let emitEvent = Component.emitEvent.bind(Component);

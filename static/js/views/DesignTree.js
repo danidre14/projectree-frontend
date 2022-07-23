@@ -1,4 +1,4 @@
-import DCL, { Button, Link, ignoreRoute, getContext, triggerFunc } from "../DCL/core.js";
+import DCL, { Button, navigateTo, ignoreRoute, getContext, setContext, triggerFunc, useParams } from "../DCL/core.js";
 
 import generateZippedProjectree from "../utils/generateProjectree.js";
 
@@ -6,14 +6,20 @@ export default class Create extends DCL {
     constructor(props) {
         super(props);
 
+        this.editing = props.editing;
+
         this.loggedIn = getContext("loggedIn");
 
-        if (props.editing && !this.loggedIn)
+        if (this.editing && !this.loggedIn)
             ignoreRoute();
 
 
-        this.state = {}
+        this.state = {
+            projectSaved: true
+        }
         const s = {
+            "project_id": null,
+            "project_name": "My Project 1",
             "project_title": "Welcome to my ProjecTree",
             "project_favicon": "/static/images/projectree-logo-primary.png",
             "project_theme": "standard",
@@ -44,12 +50,14 @@ export default class Create extends DCL {
         this.loggedIn = getContext("loggedIn");
 
         const state = {
+            project_name: "Untitled",
             project_title: "",
             project_favicon: "",
             project_theme: "standard",
             project_items: [],
         }
-        if (!this.loggedIn) {
+        if (!this.loggedIn && !this.editing) {
+            // then a logged out user is creating a projectree or continuing where they left off
             const data = localStorage.getItem("loggedOutCreateProjectreeState");
 
             if (data) {
@@ -59,36 +67,72 @@ export default class Create extends DCL {
                 state.project_theme = localState.project_theme;
                 state.project_items = localState.project_items;
             }
+        } else if (this.loggedIn) {
+            if (!this.editing) {
+                // then a logged in user is creating a new projectree, so it will remain blank
+                // unless a projectree was saved when they tried to save as anonymous and it prompted them to sign up/register
+                const data = localStorage.getItem("loggedInCreateProjectreeState");
+
+                if (data) {
+                    const localState = JSON.parse(data);
+                    state.project_title = localState.project_title;
+                    state.project_favicon = localState.project_favicon;
+                    state.project_theme = localState.project_theme;
+                    state.project_items = localState.project_items;
+                }
+            } else {
+                // then a logged in user is editing an existing projectree
+                const { projectreeId } = useParams();
+                // await sendRequest to get projectree from server
+            }
         }
 
         triggerFunc(this.setState((prevState) => {
             const newState = { ...prevState, ...state };
             return newState
         }));
+
+        this.onReload = (e) => {
+            if(this.state.projectSaved) return;
+            e.preventDefault();
+            e.returnValue = '';
+        }
+
+        DCL.onEvent("beforeNavigate", this.onReload);
     }
 
     async onUnmount() {
 
-        if (!this.loggedIn) {
-            const state = this.state;
-            const localState = {
-                project_title: state.project_title,
-                project_favicon: state.project_favicon,
-                project_theme: state.project_theme,
-                project_items: state.project_items
+        if (!this.loggedIn && !this.editing) {
+            this.state.projectSaved = true;
+            saveLocalProjectreeForAnonymous(this.state);
+        } else if (this.loggedIn) {
+            if (!this.editing) {
+                // then a logged in user is creating a new projectree, so it will remain blank
+            } else {
+                // then a logged in user is editing an existing projectree
+                const { projectreeId } = useParams();
+                // sendRequest to get projectree from server
             }
-            const data = JSON.stringify(localState);
-            localStorage.setItem("loggedOutCreateProjectreeState", data);
         }
+
+        DCL.offEvent("beforeNavigate", this.onReload);
     }
 
     async render() {
         const generateTheProjectree = this.createFunc(() => {
             generateZippedProjectree(this.state);
         })
-        const setProjectTitle = this.setState("project_title", (state, evt) => evt.target.value);
-        const setProjectFavicon = this.setState("project_favicon", (state, evt) => evt.target.value);
+        const setProjectTitle = this.setState("project_title", (state, evt) => {
+            this.state.projectSaved = false;
+            return evt.target.value;
+        });
+        const setProjectFavicon = this.setState("project_favicon", (state, evt) => {
+            this.state.projectSaved = false;
+            return evt.target.value;
+        });
         const addProjectItem = this.setState("project_items", (state) => {
+            this.state.projectSaved = false;
             return [...state, {
                 project_name: "name",
                 project_description: "description",
@@ -101,6 +145,7 @@ export default class Create extends DCL {
         });
 
         const removeProjectItem = this.setState("project_items", (state, evt) => {
+            this.state.projectSaved = false;
             const project_items = state;
 
             project_items.splice(evt.target.dataset.id, 1);
@@ -108,10 +153,90 @@ export default class Create extends DCL {
             return project_items;
         });
         const setProjectItem = this.setState("project_items", (state, evt) => {
+            this.state.projectSaved = false;
             const project_items = state;
             project_items[evt.target.dataset.id][evt.target.name] = evt.target.value;
             return project_items;
-        })
+        });
+
+        const saveProjectree = this.createFunc(() => {
+            if (!this.loggedIn) {
+                const goToSignIn = confirm("You must be signed in to save your projectree.\n\nSign in now? (Your progress will not be lost)") || false;
+
+                if (goToSignIn) {
+                    saveLocalProjectreeForAnonymous(this.state);
+                    saveLocalProjectreeForRegistered(this.state);
+
+                    this.state.projectSaved = true;
+
+                    setContext("signInReferrer", "/create");
+                    navigateTo("/signin");
+                }
+            } else {
+                if (!this.editing) {
+                    let projectreeName = (prompt("Saving Project:\n\nEnter projectree name", this.state.project_name) || (this.state.project_name || "Untitled Projectree"));
+                    if (projectreeName.trim() === "") {
+                        projectreeName = "Untitled Projectree"
+                    }
+
+                    /*
+                        sendRequest to save creation
+                        on success: navigateTo("/dashboard")
+                        on fail: alert fail message
+                    */
+                } else {
+                    /*
+                        sendRequest to save edit
+                        on success: navigateTo("/dashboard")
+                        on fail: alert fail message
+                    */
+                }
+            }
+        });
+
+        const publishProjectree = this.createFunc(() => {
+            if (!this.loggedIn) {
+                const goToSignIn = confirm("You must be signed in to publish your projectree.\n\nSign in now? (Your progress will not be lost)") || false;
+
+                if (goToSignIn) {
+                    saveLocalProjectreeForAnonymous(this.state);
+                    saveLocalProjectreeForRegistered(this.state);
+
+                    this.state.projectSaved = true;
+
+                    setContext("signInReferrer", "/create");
+                    navigateTo("/signin");
+                }
+            } else {
+                if (!this.editing) {
+                    let projectreeName = (prompt("Saving Project:\n\nEnter projectree name", this.state.project_name) || (this.state.project_name || "Untitled Projectree"));
+                    if (projectreeName.trim() === "") {
+                        projectreeName = "Untitled Projectree"
+                    }
+
+                    /*
+                        sendRequest to save creation
+                        on success: {
+                            // publish project
+                            
+                            let publishedTreeName = (prompt("Publishing Project:\n\nEnter published name", this.state.published_name) || (this.state.published_name || "username_projectree");
+                            if (publishedTreeName.trim() === "") {
+                                publishedTreeName = "username_projectree"
+                            }
+                        }
+                        on fail: alert fail message
+                    */
+
+                } else {
+                    /*
+                        sendRequest to save edit
+                        on success: navigateTo("/dashboard")
+                        on fail: alert fail message
+                    */
+                }
+            }
+
+        });
 
         const setBatchedItem = this.createFunc((evt) => {
             setTimeout(() => {
@@ -196,14 +321,15 @@ export default class Create extends DCL {
             }
 
         return (
-            // ${await new Button("Click me", { onClick: setBatchedItem }).mount(this)}
             `
         <div class="${tw`flex h-full flex-col flex-grow`}">
         <div class="${tw`sticky top-16 bg-neutral-300 px-12`}">
             <div class="${tw`container mx-auto flex flex-col justify-between gap-4 py-5 sm:flex-row sm:items-end`}">
-                <h1 class="${tw`text-3xl sm:text-4xl`}">Create ProjecTree</h1>
-                <div class="${tw`hidden text-right`}">
-                    
+                <h1 class="${tw`text-3xl sm:text-4xl`}">${this.editing ? "Edit" : "Create"} ProjecTree</h1>
+                <div class="${this.loggedIn ? "" : tw`hidden`}">
+                    <input type="text" id="projectree_name" name="projectree_name" disabled
+                        class="${tw`w-full rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}"
+                        value="${this.state.project_name}" />
                 </div>
             </div>
         </div>
@@ -253,14 +379,8 @@ export default class Create extends DCL {
                     ${await new Button("Generate Projectree", { onClick: generateTheProjectree, class: tw`rounded bg-slate-100 py-2 px-5 font-semibold text-black shadow-lg hover:bg-slate-200` }).mount(this)}
                 </div>
                 <div class="${tw`ml-auto flex justify-center gap-2 whitespace-nowrap`}">
-                    <button
-                        class="${tw`rounded bg-blue-500 py-2 px-5 font-semibold text-slate-50 shadow-lg hover:bg-blue-600`}">
-                        <a href="#save_projectree">Save Projectree</a>
-                    </button>
-                    <button
-                        class="${tw`rounded bg-blue-500 py-2 px-5 font-semibold text-slate-50 shadow-lg hover:bg-blue-600`}">
-                        <a href="#save_projectree">Publish Projectree</a>
-                    </button>
+                    ${await new Button("Save Projectree", { onClick: saveProjectree, class: tw`rounded bg-blue-500 py-2 px-5 font-semibold text-slate-50 shadow-lg hover:bg-blue-600` }).mount(this)}
+                    ${await new Button("Publish Projectree", { onClick: publishProjectree, class: tw`rounded bg-blue-500 py-2 px-5 font-semibold text-slate-50 shadow-lg hover:bg-blue-600` }).mount(this)}
                 </div>
             </div>
         </div>
@@ -268,6 +388,32 @@ export default class Create extends DCL {
         `
         );
     }
+}
+
+const saveLocalProjectreeForAnonymous = function (state) {
+    // const state = this.state;
+    const localState = {
+        project_name: state.project_name,
+        project_title: state.project_title,
+        project_favicon: state.project_favicon,
+        project_theme: state.project_theme,
+        project_items: state.project_items
+    }
+    const data = JSON.stringify(localState);
+    localStorage.setItem("loggedOutCreateProjectreeState", data);
+}
+
+const saveLocalProjectreeForRegistered = function (state) {
+    // const state = this.state;
+    const localState = {
+        project_name: state.project_name,
+        project_title: state.project_title,
+        project_favicon: state.project_favicon,
+        project_theme: state.project_theme,
+        project_items: state.project_items
+    }
+    const data = JSON.stringify(localState);
+    localStorage.setItem("loggedInCreateProjectreeState", data);
 }
 
 function dateFormat(inputDate, format) {
@@ -289,3 +435,9 @@ function dateFormat(inputDate, format) {
 
     return format;
 }
+
+// window.addEventListener('beforeunload', function (e) {
+//     // if (objectUtils.objectLength(asyncQueue) === 0) return; // if already saved
+//     e.preventDefault();
+//     e.returnValue = '';
+// });

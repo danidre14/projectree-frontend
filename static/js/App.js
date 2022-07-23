@@ -24,13 +24,13 @@ export default class App extends DCL {
                 {
                     path: "/create",
                     title: "Create",
-                    view: async() => await import("./views/Create.js"),
+                    view: async() => await import("./views/DesignTree.js"),
                     props: { editing: false }
                 },
                 {
-                    path: "/edit/:id",
+                    path: "/edit/:projectreeId",
                     title: "Edit",
-                    view: async() => await import("./views/Create.js"),
+                    view: async() => await import("./views/DesignTree.js"),
                     props: { editing: true }
                 },
                 {

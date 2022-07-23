@@ -1,4 +1,4 @@
-import DCL, { Button, Link, getContext, setContext, navigateTo } from "../DCL/core.js";
+import DCL, { Button, Link, getContext, setContext, clearContext, navigateTo } from "../DCL/core.js";
 
 export default class Dashboard extends DCL {
 	constructor(props) {
@@ -69,5 +69,7 @@ export default class Dashboard extends DCL {
 
 function attemptSignIn() {
 	setContext("loggedIn", true);
-	navigateTo("/dashboard");
+	const successLink = getContext("signInReferrer") || "/dashboard";
+	clearContext("signInReferrer");
+	navigateTo(successLink);
 }

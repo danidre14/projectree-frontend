@@ -20,6 +20,7 @@ export default class Router extends DCL {
 
         DCL.onEvent("navigateTo", this.navigateTo);
         DCL.onEvent("ignoreRoute", this._goTo404);
+        window.addEventListener("beforeunload", this._beforeUnload);
     }
 
     async onUnmount() {
@@ -27,12 +28,29 @@ export default class Router extends DCL {
 
         DCL.offEvent("navigateTo", this.navigateTo);
         DCL.offEvent("ignoreRoute", this._goTo404);
+        window.removeEventListener("beforeunload", this._beforeUnload);
+    }
+
+    _beforeUnload(e) {
+        if (DCL._confirmNavigate()) {
+            e.preventDefault();
+            e.returnValue = '';
+        } else {
+            return;
+        }
     }
 
     navigateTo = async url => {
         try {
-            history.pushState(null, null, url);
-            await this.run();
+            let navigateToUrl = true;
+            const confirmNavigate = DCL._confirmNavigate();
+            if (confirmNavigate) {
+                navigateToUrl = confirm("Leave site?\n\nChanges you made may not be saved.") || false;
+            }
+            if (navigateToUrl) {
+                history.pushState(null, null, url);
+                await this.run();
+            }
         } catch (e) {
             console.log(e);
             window.open(url, "_blank").focus();
@@ -53,6 +71,7 @@ export default class Router extends DCL {
             }
             if (target.matches("[data-link]")) {
                 e.preventDefault();
+
                 await this.navigateTo(target.href);
             }
         });
