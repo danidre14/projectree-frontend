@@ -1,4 +1,5 @@
-import DCL, { Button, Link, ignoreRoute, getContext } from "../DCL/core.js";
+import DCL, { Button, Link, ignoreRoute, getContext, navigateTo } from "../DCL/core.js";
+import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
 
 export default class Dashboard extends DCL {
     constructor(props) {
@@ -20,6 +21,17 @@ export default class Dashboard extends DCL {
     }
 
     async onMount() {
+        let controller = new AbortController();
+        const url = "https://10minuteendpoint.net/endpoint/62dce2d78eb6fcb424c20074";
+        // const response =  get(url);
+        const pat = patch(url, {}, ["codea", controller.signal]).then(res => console.log("res,", res)).catch(err => console.error("err,", err, err.name, {err}));
+        controller.abort("Custonnm here");
+        // cancel("codea")
+        // pat.cancel();
+        console.log("pat", pat)
+        // console.log(put(url));
+        navigateTo("/");
+        // console.log(response);
         // const hi = this.setState("count", this.state.count + 5);
         // await window.asyncWait(1000);
 
