@@ -93,7 +93,7 @@ export default class Create extends DCL {
         }));
 
         this.onReload = (e) => {
-            if(this.state.projectSaved) return;
+            if (this.state.projectSaved) return;
             e.preventDefault();
             e.returnValue = '';
         }
@@ -257,60 +257,55 @@ export default class Create extends DCL {
                 projectItems +=
                     `<div class="${tw`my-12`}">
             <div class="${tw`flex items-end justify-between px-4 pb-4`}">
-                <span class="${tw`text-4xl`}">Project ${projNum}</span>
+                <span class="${tw`text-3xl font-medium`}">Project ${projNum}</span>
                 ${await new Button(`
-                <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-10 w-10`}" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>`, { onClick: removeProjectItem, dataSet: { id: i } }).mount(this)}
+                </svg>`, { onClick: removeProjectItem, dataSet: { id: i }, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800`, title: "Delete Projectree" }).mount(this)}
             </div>
-            <div class="${tw`overflow-hidden rounded-xl border border-neutral-300 text-xl font-thin`}">
+            <div class="${tw`overflow-hidden rounded-xl border border-zinc-200 text-xl font-thin`}">
                 <div class="${tw`grid grid-cols-12`}">
-                    <div class="${tw`col-span-8 border`}">
+                    <div class="${tw`col-span-8 border-b border-r border-zinc-200`}">
                         <input id="project_item_${projNum}_name" type="text" name="project_name" data-id="${i}" placeholder="Name"
                             class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_name}" />
                     </div>
-                    <dcl style="display: none;"></dcl>
-                    <!-- <template></template> -->
-                    <div class="${tw`col-span-4 border`}">
+                    <div class="${tw`col-span-4 border-b border-zinc-200`}">
                         <input id="project_item_${projNum}_year" type="date" name="project_year" data-id="${i}" placeholder="Year Developed"
                             class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_year}" />
                     </div>
                 </div>
 
                 <div class="${tw`grid grid-cols-12`}">
-                    <div class="${tw`col-span-7 row-span-3 h-64 border`}">
+                    <div class="${tw`col-span-7 row-span-3 h-64 border-b border-r border-zinc-200`}">
                         <textarea id="project_item_${projNum}_description" name="project_description" data-id="${i}" placeholder="Description"
                             class="${tw`h-full w-full resize-none bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}">${project.project_description}</textarea>
                     </div>
-                    <div class="${tw`col-span-5 flex h-64 max-h-64 flex-col border bg-neutral-200`}">
+                    <div class="${tw`col-span-5 flex h-64 max-h-64 flex-col border-b border-zinc-200 bg-zinc-200`}">
                         <div
                             class="${tw`flex max-h-56 flex-grow items-center justify-center overflow-hidden`}">
                             <img id="project_item_${projNum}_photo_preview" class="${tw`w-full`}"
-                                src="https://flevar.com/images/hero-images/home-hero-image.jpg" alt=""
-                                onerror="console.log(event)" />
+                                src="${project.project_photo}" alt="" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" />
                         </div>
                         <input id="project_item_${projNum}_photo" type="text" name="project_photo" data-id="${i}" placeholder="Photo"
-                            class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_photo}" />
+                            class="${tw`w-full border-t bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_photo}" />
                     </div>
                 </div>
 
-                <div class="${tw``}">
-                    <div class="${tw`border`}">
-                        <input id="project_item_${projNum}_languages" type="text" name="project_languages"
-                        data-id="${i}" placeholder="Languages (comma separated)"
-                            class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_languages}" />
-                    </div>
+                <div class="${tw`border-b border-zinc-200`}">
+                    <input id="project_item_${projNum}_languages" type="text" name="project_languages"
+                    data-id="${i}" placeholder="Languages (comma separated)"
+                        class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_languages}" />
                 </div>
 
                 <div class="${tw`grid grid-cols-2`}">
-                    <div class="${tw`border`}">
+                    <div class="${tw`border-r border-zinc-200`}">
                         <input id="project_item_${projNum}_source" type="text" name="project_source"
                         data-id="${i}" placeholder="Source Code Link (optional)"
                             class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_source}" />
                     </div>
-                    <div class="${tw`border`}">
+                    <div>
                         <input id="project_item_${projNum}_link" type="text" name="project_link" data-id="${i}" placeholder="Demo Link (optional)"
                             class="${tw`w-full bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${project.project_link}" />
                     </div>
@@ -322,41 +317,41 @@ export default class Create extends DCL {
 
         return (
             `
-        <div class="${tw`flex h-full flex-col flex-grow`}">
-        <div class="${tw`sticky top-16 bg-neutral-300 px-12`}">
-            <div class="${tw`container mx-auto flex flex-col justify-between gap-4 py-5 sm:flex-row sm:items-end`}">
-                <h1 class="${tw`text-3xl sm:text-4xl`}">${this.editing ? "Edit" : "Create"} ProjecTree</h1>
-                <div class="${this.loggedIn ? "" : tw`hidden`}">
+        <div class="${tw`flex h-full flex-grow flex-col`}">
+        <div class="${tw`sticky top-[4.5rem] border-b border-zinc-200 bg-zinc-50`}">
+            <div class="${tw`container mx-auto flex flex-row flex-wrap items-center justify-between gap-5 py-5 px-12`}">
+                <h1 class="${tw`text-4xl font-semibold`}">${this.editing ? "Edit" : "Create"}</h1>
+                <div class="${tw`${this.loggedIn ? "" : "hidden"} max-w-sm flex-grow lg:max-w-xs`}">
                     <input type="text" id="projectree_name" name="projectree_name" disabled
-                        class="${tw`w-full rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}"
+                        class="${tw`w-full rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
                         value="${this.state.project_name}" />
                 </div>
             </div>
         </div>
-        <section class="${tw`flex-grow px-12`}">
-            <div class="${tw`container mx-auto py-5`}">
+        <section class="${tw`container mx-auto flex-grow px-12`}">
+            <div class="${tw`py-5`}">
                 <!-- Projectree Meta Data -->
                 <div class="${tw`grid justify-between gap-4 sm:grid-cols-3`}">
                     <div class="${tw`flex flex-col gap-1`}">
-                        <label for="projectree_title" class="${tw`text-xl italic text-neutral-600`}">Projectree
+                        <label for="projectree_title" class="${tw`text-xl font-medium italic text-neutral-600`}">Projectree
                             Title</label>
                         <input type="text" id="projectree_title" name="projectree_title"
-                            class="${tw`rounded-lg border border-neutral-300 bg-white py-1 px-3 text-xl shadow-inner outline-none focus:bg-gray-50`}"
+                            class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
                             onchange="${setProjectTitle}" value="${this.state.project_title}" />
                     </div>
                     <div class="${tw`flex flex-col gap-1`}">
-                        <label for="projectree_theme" class="${tw`text-xl italic text-neutral-600`}">Theme</label>
+                        <label for="projectree_theme" class="${tw`text-xl font-medium italic text-neutral-600`}">Theme</label>
                         <select id="projectree_theme" name="project_theme"
-                            class="${tw`rounded-lg border border-neutral-300 py-1 px-3 text-xl shadow-inner`}">
+                            class="${tw`rounded-lg border border-zinc-200 py-1 px-3 text-xl`}">
                             <option disabled>Choose a theme</option>
                             <option selected value="standard">Standard</option>
                         </select>
                     </div>
                     <div class="${tw`flex flex-col gap-1`}">
-                        <label for="projectree_favicon" class="${tw`text-xl italic text-neutral-600`}">Favicon</label>
-                        <div class="${tw`flex overflow-hidden rounded-lg border border-neutral-300 shadow-inner`}">
+                        <label for="projectree_favicon" class="${tw`text-xl font-medium italic text-neutral-600`}">Favicon</label>
+                        <div class="${tw`flex overflow-hidden rounded-lg border border-zinc-200`}">
                             <div
-                                class="${tw`flex w-12 items-center justify-center border-r border-neutral-300 bg-neutral-200`}">
+                                class="${tw`flex w-12 items-center justify-center border-r border-zinc-200 bg-zinc-200`}">
                                 <img id="projectree_favicon_preview" class="${tw`h-7 w-7`}"
                                     src="/static/images/projectree-logo-primary.png" alt="logo" />
                             </div>
@@ -371,16 +366,40 @@ export default class Create extends DCL {
                 ${projectItems}
             </div>
         </section>
-        <div class="${tw`sticky bottom-0 bg-neutral-300 px-12`}">
-            <div
-                class="${tw`container mx-auto flex flex-col flex-wrap justify-between gap-4 py-5 sm:flex-row sm:items-end`}">
-                <div class="${tw`flex justify-center gap-2 whitespace-nowrap`}">
-                    ${await new Button("Add Project Item", { onClick: addProjectItem, class: tw`rounded bg-slate-100 py-2 px-5 font-semibold text-black shadow-lg hover:bg-slate-200` }).mount(this)}
-                    ${await new Button("Generate Projectree", { onClick: generateTheProjectree, class: tw`rounded bg-slate-100 py-2 px-5 font-semibold text-black shadow-lg hover:bg-slate-200` }).mount(this)}
-                </div>
-                <div class="${tw`ml-auto flex justify-center gap-2 whitespace-nowrap`}">
-                    ${await new Button("Save Projectree", { onClick: saveProjectree, class: tw`rounded bg-blue-500 py-2 px-5 font-semibold text-slate-50 shadow-lg hover:bg-blue-600` }).mount(this)}
-                    ${await new Button("Publish Projectree", { onClick: publishProjectree, class: tw`rounded bg-blue-500 py-2 px-5 font-semibold text-slate-50 shadow-lg hover:bg-blue-600` }).mount(this)}
+        <div class="${tw`sticky bottom-0 border-t border-zinc-200`}">
+            <div class="${tw`container mx-auto bg-zinc-50 px-12`}">
+                <div class="${tw`flex flex-row flex-wrap items-end justify-between gap-4 py-5`}">
+                    <div class="${tw`flex justify-center gap-2 whitespace-nowrap`}">
+                        ${await new Button("Add Project", { onClick: addProjectItem, class: tw`hidden whitespace-nowrap rounded border border-red-400 bg-zinc-50 py-2 px-5 font-bold text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:inline-block`, title: "Add Project" }).mount(this)}
+                        ${await new Button(`<svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>`,
+                    { onClick: addProjectItem, class: tw`rounded border border-red-400 p-2 text-sm text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:hidden`, title: "Add Project" }).mount(this)}
+                        ${await new Button("Generate", { onClick: generateTheProjectree, class: tw`hidden whitespace-nowrap rounded border border-red-400 bg-zinc-50 py-2 px-5 font-bold text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:inline-block`, title: "Generate Projectree" }).mount(this)}
+                        ${await new Button(`<svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>`,
+                        { onClick: generateTheProjectree, class: tw`rounded border border-red-400 p-2 text-sm text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:hidden`, title: "Add Projecte Projectree" }).mount(this)}
+                    </div>
+                    <div class="${tw`ml-auto flex justify-center gap-2 whitespace-nowrap`}">
+                        ${await new Button("Save", { onClick: saveProjectree, class: tw`hidden whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800 sm:inline-block`, title: "Save Projectree" }).mount(this)}
+                        ${await new Button(`<svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                            </svg>`,
+                            { onClick: saveProjectree, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800 sm:hidden`, title: "Save Projectree" }).mount(this)}
+                        ${await new Button("Publish", { onClick: publishProjectree, class: tw`hidden whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800 sm:inline-block`, title: "Publish Projectree" }).mount(this)}
+                        ${await new Button(`<svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>`,
+                                { onClick: publishProjectree, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800 sm:hidden`, title: "Publish Projectree" }).mount(this)}
+                    </div>
                 </div>
             </div>
         </div>

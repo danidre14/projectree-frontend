@@ -1,7 +1,14 @@
+@import "/static/css/fonts.css";
+
+:root {
+    font-family: "IBM Plex Sans", sans-serif !important;
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
 
-.container {
-    max-width: 1024px;
+::-webkit-inner-spin-button {
+    height: 1em;
 }
+

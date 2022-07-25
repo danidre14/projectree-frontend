@@ -54,13 +54,13 @@ export default class App extends DCL {
                 title: "Error 404",
                 view: async() => await import("./views/Page404.js")
             },
-            class: tw`h-full flex flex-col flex-grow`
+            class: tw`flex h-full flex-grow flex-col`
         });
         return `
         <div class="${tw`flex min-h-screen flex-col`}">
             ${await new Nav().mount(this)}
 
-            <main class="${tw`flex flex-grow flex-col bg-neutral-100`}">
+            <main class="${tw`flex h-full flex-grow flex-col bg-zinc-50`}">
                 ${await router.mount(this)}
             </main>
 
