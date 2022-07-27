@@ -13,29 +13,25 @@ export default class Dashboard extends DCL {
 
         this.state = {
             projectrees: [
-                { id: 2, name: "Project 2", modifiedAt: "20/02/2022 04:32 pm" },
-                { id: 1, name: "Project 1", modifiedAt: "20/07/2021 11:23 pm" }
+                // { id: 2, name: "Project 2", modifiedAt: "20/02/2022 04:32 pm" },
+                // { id: 1, name: "Project 1", modifiedAt: "20/07/2021 11:23 pm" }
             ]
         }
 
     }
 
     async onMount() {
-        let controller = new AbortController();
-        const url = "https://10minuteendpoint.net/endpoint/62dce2d78eb6fcb424c20074";
-        // const response =  get(url);
-        const pat = patch(url, {}, ["codea", controller.signal]).then(res => console.log("res,", res)).catch(err => console.error("err,", err, err.name, {err}));
-        // controller.abort("Custonnm here");
-        // cancel("codea")
-        // pat.cancel();
-        console.log("pat", pat)
-        // console.log(put(url));
-        // navigateTo("/");
-        // console.log(response);
-        // const hi = this.setState("count", this.state.count + 5);
-        // await window.asyncWait(1000);
+        if (!this.loggedIn) return;
 
-        // DCL.triggerFunc(hi);
+        try {
+            const res = await get("/projectrees", {},);
+
+            if (res.success) {
+                this.setState("projectrees", res.data);
+            }
+        } catch (e) {
+            alert("Failed to get projectrees");
+        }
     }
 
     async render() {

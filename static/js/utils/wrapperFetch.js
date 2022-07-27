@@ -48,7 +48,8 @@ function abortRequestByKey(...keys) {
             }
 }
 
-const req = (url, data = {}, externalSignals = [], method = "GET") => {
+const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method = "GET") => {
+    if (!externalHeaders) externalHeaders = {};
     return new Promise((res, rej) => {
         const externalSignalsType = (typeof externalSignals === "string") ? "string" :
             ((externalSignals instanceof Array || Array.isArray(externalSignals)) ? "array" : "controller");
@@ -84,7 +85,8 @@ const req = (url, data = {}, externalSignals = [], method = "GET") => {
         const options = {
             method,
             headers: {
-                "Content-Type": isGet ? "application/x-www-form-urlencoded" : "application/json"
+                "Content-Type": isGet ? "application/x-www-form-urlencoded" : "application/json",
+                ...externalHeaders
             },
             signal: multiSignal
         };
@@ -137,11 +139,11 @@ function anySignal(signals, externalOnAbort) {
 
     return controller.signal;
 }
-req.get = (path, params, signal) => req(baseUrl + path, params, signal, "GET");
-req.post = (path, params, signal) => req(baseUrl + path, params, signal, "POST");
-req.put = (path, params, signal) => req(baseUrl + path, params, signal, "PUT");
-req.patch = (path, params, signal) => req(baseUrl + path, params, signal, "PATCH");
-req.del = (path, params, signal) => req(baseUrl + path, params, signal, "DELETE");
+req.get = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "GET");
+req.post = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "POST");
+req.put = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "PUT");
+req.patch = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "PATCH");
+req.del = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "DELETE");
 req.cancel = (key) => abortRequestByKey(key);
 
 

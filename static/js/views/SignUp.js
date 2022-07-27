@@ -1,14 +1,18 @@
 import DCL, { Button, Link, getContext, setContext, navigateTo, useQuery, triggerFunc } from "../DCL/core.js";
 
+import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+
+import { makeString, isValidPassword } from "../utils/helperUtils.js";
+
 export default class Dashboard extends DCL {
 	constructor(props) {
 		super(props);
 		this.setTitle("Sign Up");
-		
-        this.loggedIn = getContext("loggedIn");
-        if(this.loggedIn) {
-            navigateTo("/dashboard");
-        }
+
+		this.loggedIn = getContext("loggedIn");
+		if (this.loggedIn) {
+			navigateTo("/dashboard");
+		}
 
 		this.state = {
 			registration: {
@@ -28,7 +32,7 @@ export default class Dashboard extends DCL {
 	async onMount() {
 		const queryParams = this.queryParams;
 
-		if(queryParams.email) {
+		if (queryParams.email) {
 			triggerFunc(this.setState("confirmation", (state, event) => {
 				const confimationState = state;
 				confimationState.email = queryParams.email;
@@ -43,7 +47,6 @@ export default class Dashboard extends DCL {
 	}
 
 	async render() {
-		console.log(this.rendered, this.mounted)
 		let confirmEmail = false;
 		const queryParams = this.queryParams;
 
@@ -54,11 +57,11 @@ export default class Dashboard extends DCL {
 		}
 
 		const submitRegistrationForm = this.createFunc(() => {
-			attemptRegister();
+			attemptRegister(this.state.registration);
 		});
 
 		const submitConfirmationForm = this.createFunc(() => {
-			attemptConfirmation();
+			attemptConfirmation(this.state.confirmation);
 		});
 
 		const setRegistrationState = this.setState("registration", (state, evt) => {
@@ -182,12 +185,75 @@ export default class Dashboard extends DCL {
 	}
 }
 
-function attemptRegister() {
-	// setContext("loggedIn", true);
-	navigateTo("/signup?confirm_email=true");
+async function attemptRegister(data) {
+	let {
+		first_name = "", last_name = "",
+		username = "",
+		email_1 = "", email_2 = "",
+		password_1 = "", password_2 = ""
+	} = data;
+
+	first_name = makeString(first_name);
+	last_name = makeString(last_name);
+	username = makeString(username);
+	email_1 = makeString(email_1);
+	email_2 = makeString(email_2);
+	password_1 = makeString(password_1);
+	password_2 = makeString(password_2);
+
+	if (!first_name) {
+		alert("First name field required");
+		return;
+	}
+	if (!last_name) {
+		alert("Last name field required");
+		return;
+	}
+	if (!username) {
+		alert("Username field required");
+		return;
+	}
+	if (!email_1 || !email_2) {
+		alert("Email fields required");
+		return;
+	}
+	if (!password_1 || !password_2) {
+		alert("Password fields required");
+		return;
+	}
+
+	if (email_1 !== email_2) {
+		alert("Emails do not match");
+		return;
+	}
+
+	if (password_1 !== password_2) {
+		alert("Passwords do not match");
+		return;
+	}
+
+	if (!isValidPassword(password_1)) {
+		alert("Password must be 4 or more alphanumeric characters");
+		return;
+	}
+
+	try {
+		const res = await post("/auth/register", {
+			first_name, last_name,
+			username, email: email_1, password: password_1
+		});
+
+		if (res.success) {
+			navigateTo("/signin");
+		} else {
+			if (res.message)
+				alert(res.message);
+		}
+	} catch (e) {
+		alert("Sign up failed");
+	}
 }
 
 function attemptConfirmation() {
-	setContext("loggedIn", true);
-	navigateTo("/dashboard");
+	navigateTo("/signin");
 }

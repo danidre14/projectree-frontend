@@ -1,4 +1,7 @@
 import DCL, { Button, Link, getContext, setContext, clearContext, navigateTo } from "../DCL/core.js";
+import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+
+import { makeString } from "../utils/helperUtils.js";
 
 export default class Dashboard extends DCL {
 	constructor(props) {
@@ -25,7 +28,7 @@ export default class Dashboard extends DCL {
 
 	async render() {
 		const setSignedIn = this.createFunc(() => {
-			attemptSignIn();
+			attemptSignIn(this.state);
 		});
 
 		const setLoginState = this.setState((state, evt) => {
@@ -72,9 +75,33 @@ export default class Dashboard extends DCL {
 	}
 }
 
-function attemptSignIn() {
-	setContext("loggedIn", true);
-	const successLink = getContext("signInReferrer") || "/dashboard";
-	clearContext("signInReferrer");
-	navigateTo(successLink);
+async function attemptSignIn(data) {
+	let { username = "", password = "" } = data;
+	username = makeString(username);
+	password = makeString(password);
+
+	if (!username) {
+		alert("Username field required.");
+		return;
+	}
+	if (!password) {
+		alert("Password field required.");
+		return;
+	}
+
+	try {
+		const res = await post("/auth/signin", { username, password });
+
+		if (res.success) {
+			setContext("loggedIn", true);
+			const successLink = getContext("signInReferrer") || "/dashboard";
+			clearContext("signInReferrer");
+			navigateTo(successLink);
+		} else {
+			if (res.message)
+				alert(res.message);
+		}
+	} catch (e) {
+		alert("Sign in failed");
+	}
 }

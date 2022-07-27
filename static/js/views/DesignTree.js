@@ -1,5 +1,7 @@
 import DCL, { Button, navigateTo, ignoreRoute, getContext, setContext, triggerFunc, useParams } from "../DCL/core.js";
 
+import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+
 import generateZippedProjectree from "../utils/generateProjectree.js";
 
 export default class Create extends DCL {
@@ -83,6 +85,25 @@ export default class Create extends DCL {
             } else {
                 // then a logged in user is editing an existing projectree
                 const { projectreeId } = useParams();
+
+                try {
+                    const res = await get(`/projectree/edit/${projectreeId}`);
+
+                    if (res.success) {
+                        const remoteState = res.projectree;
+                        state.project_id = remoteState.project_id;
+                        state.project_title = remoteState.project_title;
+                        state.project_favicon = remoteState.project_favicon;
+                        state.project_theme = remoteState.project_theme;
+                        state.project_items = remoteState.project_items;
+                    } else {
+                        alert("Could not get projectree");
+                        navigateTo("/dashboard");
+                    }
+                } catch (e) {
+                    alert("Could not get projectree");
+                    navigateTo("/dashboard");
+                }
                 // await sendRequest to get projectree from server
             }
         }
@@ -375,14 +396,14 @@ export default class Create extends DCL {
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                             </svg>`,
-                    { onClick: addProjectItem, class: tw`rounded border border-red-400 p-2 text-sm text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:hidden`, title: "Add Project" }).mount(this)}
+                { onClick: addProjectItem, class: tw`rounded border border-red-400 p-2 text-sm text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:hidden`, title: "Add Project" }).mount(this)}
                         ${await new Button("Generate", { onClick: generateTheProjectree, class: tw`hidden whitespace-nowrap rounded border border-red-400 bg-zinc-50 py-2 px-5 font-bold text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:inline-block`, title: "Generate Projectree" }).mount(this)}
                         ${await new Button(`<svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>`,
-                        { onClick: generateTheProjectree, class: tw`rounded border border-red-400 p-2 text-sm text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:hidden`, title: "Add Projecte Projectree" }).mount(this)}
+                    { onClick: generateTheProjectree, class: tw`rounded border border-red-400 p-2 text-sm text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:hidden`, title: "Add Projecte Projectree" }).mount(this)}
                     </div>
                     <div class="${tw`ml-auto flex justify-center gap-2 whitespace-nowrap`}">
                         ${await new Button("Save", { onClick: saveProjectree, class: tw`hidden whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800 sm:inline-block`, title: "Save Projectree" }).mount(this)}
@@ -391,14 +412,14 @@ export default class Create extends DCL {
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                             </svg>`,
-                            { onClick: saveProjectree, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800 sm:hidden`, title: "Save Projectree" }).mount(this)}
+                        { onClick: saveProjectree, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800 sm:hidden`, title: "Save Projectree" }).mount(this)}
                         ${await new Button("Publish", { onClick: publishProjectree, class: tw`hidden whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800 sm:inline-block`, title: "Publish Projectree" }).mount(this)}
                         ${await new Button(`<svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>`,
-                                { onClick: publishProjectree, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800 sm:hidden`, title: "Publish Projectree" }).mount(this)}
+                            { onClick: publishProjectree, class: tw`rounded bg-red-400 p-2 text-sm text-zinc-50 hover:bg-red-800 sm:hidden`, title: "Publish Projectree" }).mount(this)}
                     </div>
                 </div>
             </div>
