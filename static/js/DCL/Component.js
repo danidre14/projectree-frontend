@@ -133,6 +133,31 @@ class Component {
 
     setTitle(title) {
         document.title = title;
+        try {
+            document.querySelector(`meta[property="og:title"]`).setAttribute("content", title);
+        } catch {
+            this.constructor._addMetaTag({ property: "og:title", content: title });
+        }
+    }
+    setDescription(description) {
+        try {
+            document.querySelector(`meta[name="description"]`).setAttribute("content", description);
+        } catch {
+            this.constructor._addMetaTag({ name: "description", content: description });
+        }
+        try {
+            document.querySelector(`meta[property="og:description"]`).setAttribute("content", description);
+        } catch {
+            this.constructor._addMetaTag({ property: "og:description", content: description });
+        }
+    }
+
+    static _addMetaTag(data) {
+        const meta = document.createElement("meta");
+        for (const [key, value] of Object.entries(data))
+            if (meta[key])
+                meta[key] = value;
+        document.getElementsByTagName("head")[0].appendChild(meta);
     }
 
     monitorContext(key, callback, ...args) {
@@ -162,7 +187,6 @@ class Component {
             }
             const newStateSignature = JSON.stringify(this.state);
             if (prevStateSignature !== newStateSignature) {
-                console.log(this.state.registration)
                 setTimeout(async () => {
                     checkForSelectedItem(document.activeElement);
                     this._rerender();

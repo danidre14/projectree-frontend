@@ -52,7 +52,7 @@ export default class Router extends DCL {
                 await this.run();
             }
         } catch (e) {
-            console.log(e);
+            console.warn(e);
             window.open(url, "_blank").focus();
         }
     };
@@ -111,8 +111,11 @@ export default class Router extends DCL {
             new loading.view({ ...props, params, query });
 
         if (match.route.title) {
-            document.title = match.route.title;
+            this.setTitle(match.route.title);
             this.setActiveRouteOnElement(match);
+        }
+        if(match.route.description) {
+            this.setDescription(match.route.description);
         }
 
         return await this._rerender();
@@ -138,12 +141,15 @@ export default class Router extends DCL {
             new loading.view({ ...props, params, query });
 
         if (match.route.title) {
-            document.title = match.route.title;
+            this.setTitle(match.route.title);
             this.setActiveRouteOnElement(match);
+        }
+        if(match.route.description) {
+            this.setDescription(match.route.description);
         }
 
         return await this._rerender();
-    }
+    };
 
     async render() {
         if (this.view === null) return "";

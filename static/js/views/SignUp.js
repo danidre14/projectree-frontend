@@ -50,8 +50,6 @@ export default class Dashboard extends DCL {
 		let confirmEmail = false;
 		const queryParams = this.queryParams;
 
-		console.log(this.state.registration)
-
 		if (queryParams.confirm_email) {
 			confirmEmail = true;
 		}

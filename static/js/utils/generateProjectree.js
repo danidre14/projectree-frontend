@@ -5,25 +5,32 @@
 async function generateZippedProjectree(projectree) {
     projectree = JSON.parse(JSON.stringify(projectree));
 
-    console.log("generating projectree");
+    projectree.description =  `Generated Projectree for ${projectree.project_title}`
+
+    console.log("Generating projectree");
 
     const theme = projectree.project_theme;
-    const title = projectree.project_title;
-    const favicon = projectree.project_favicon;
+    const title = projectree.project_title || "Generated Projectree";
+    const description = projectree.description || `Generated Projectree for ${title}`;
+    const favicon = projectree.project_favicon || "assets/default_16x16_favicon.png";
+
+    const templateHTML = await readTextFile(`/static/templates/${theme}/index.pjtl`);
 
     let generatedHTML = "";
-    const templateHTML = await readTextFile(`/static/templates/${theme}/index.html`);
 
-    console.log("Reading template html")
-
-
+    console.log("Generating template html");
 
     generatedHTML = templateHTML;
-    generatedHTML = generatedHTML.replaceAll("<!--project_title-->", title);
-    generatedHTML = generatedHTML.replaceAll("<!--project_favicon-->", favicon);
-    generatedHTML = generatedHTML.replaceAll("// projectree = {};", `projectree = ${JSON.stringify(projectree)};`);
+    generatedHTML = generatedHTML.replaceAll("&lt;!--Projectree-Title--&gt;", title);
+    generatedHTML = generatedHTML.replaceAll("&lt;!--Projectree-Description--&gt;", description);
+    generatedHTML = generatedHTML.replaceAll("&lt;!--project_favicon--&gt;", favicon);
+    generatedHTML = generatedHTML.replace("const projectree = {};", `const projectree = ${JSON.stringify(projectree)};`);
 
-    const defaultProjectPhoto = await (await fetch(`/static/templates/${theme}/assets/default_project_photo.png`)).blob();
+    console.log("Generating Assets");
+
+    const defaultFaviconICO = await readBlobFile(`/static/templates/${theme}/assets/favicon.ico`);
+    const defaultFaviconPNG = await readBlobFile(`/static/templates/${theme}/assets/default_16x16_favicon.png`);
+    const defaultProjectPhoto = await readBlobFile(`/static/templates/${theme}/assets/default_project_photo.png`);
     const twindLib = await readTextFile(`/static/templates/${theme}/libs/twind.umd.js`);
     const twindLibMap = await readTextFile(`/static/templates/${theme}/libs/twind.umd.js.map`);
     // return
@@ -31,6 +38,8 @@ async function generateZippedProjectree(projectree) {
     const zip = new JSZip();
     const assetFolder = zip.folder("assets");
 
+    assetFolder.file("favicon.ico", defaultFaviconICO);
+    assetFolder.file("default_16x16_favicon.png", defaultFaviconPNG);
     assetFolder.file("default_project_photo.png", defaultProjectPhoto);
 
 
@@ -38,7 +47,7 @@ async function generateZippedProjectree(projectree) {
     libsFolder.file("twind.umd.js", twindLib);
     libsFolder.file("twind.umd.js.map", twindLibMap);
 
-    console.log("zipping file");
+    console.log("Bundling file");
 
     zip.file("index.html", generatedHTML);
 
@@ -47,8 +56,8 @@ async function generateZippedProjectree(projectree) {
         compression: "DEFLATE",
         compressionOptions: { level: 9 }
     }).then(file => {
-        console.log("downloading file", file)
-        downloadFile(file, "Projectree", ".zip");
+        console.log("Downloading Projectree", file)
+        downloadFile(file, `Projectree-${title}`, ".zip");
     });
 }
 
@@ -74,6 +83,12 @@ function getAccurateDate() {
 async function readTextFile(file) {
     const response = await fetch(file);
     const data = await response.text();
+    return data;
+}
+
+async function readBlobFile(file) {
+    const response = await fetch(file);
+    const data = await response.blob();
     return data;
 }
 

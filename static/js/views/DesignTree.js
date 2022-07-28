@@ -259,17 +259,6 @@ export default class Create extends DCL {
 
         });
 
-        const setBatchedItem = this.createFunc((evt) => {
-            setTimeout(() => {
-                console.log("batched called")
-                DCL.triggerFunc(this.setState("project_items", (state, evt) => {
-                    const project_items = state;
-                    project_items[evt.target.dataset.id][evt.target.name] = evt.target.value;
-                    return project_items;
-                }), evt)
-            }, 1000);
-        });
-
         let projectItems = "";
         if (this.state.project_items)
             for (let i = 0; i < this.state.project_items.length; i++) {
