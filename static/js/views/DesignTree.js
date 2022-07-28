@@ -329,7 +329,7 @@ export default class Create extends DCL {
             `
         <div class="${tw`flex h-full flex-grow flex-col`}">
         <div class="${tw`sticky top-[4.5rem] border-b border-zinc-200 bg-zinc-50`}">
-            <div class="${tw`container mx-auto flex flex-row flex-wrap items-center justify-between gap-5 py-5 px-12`}">
+            <div class="${tw`container mx-auto flex flex-row flex-wrap items-center justify-between gap-5 py-5 px-4 sm:px-12`}">
                 <h1 class="${tw`text-4xl font-semibold`}">${this.editing ? "Edit" : "Create"}</h1>
                 <div class="${tw`${this.loggedIn ? "" : "hidden"} max-w-sm flex-grow lg:max-w-xs`}">
                     <input type="text" id="projectree_name" name="projectree_name" disabled
@@ -338,7 +338,7 @@ export default class Create extends DCL {
                 </div>
             </div>
         </div>
-        <section class="${tw`container mx-auto flex-grow px-12`}">
+        <section class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
             <div class="${tw`py-5`}">
                 <!-- Projectree Meta Data -->
                 <div class="${tw`grid justify-between gap-4 sm:grid-cols-3`}">
@@ -377,7 +377,7 @@ export default class Create extends DCL {
             </div>
         </section>
         <div class="${tw`sticky bottom-0 border-t border-zinc-200`}">
-            <div class="${tw`container mx-auto bg-zinc-50 px-12`}">
+            <div class="${tw`container mx-auto bg-zinc-50 px-4 sm:px-12`}">
                 <div class="${tw`flex flex-row flex-wrap items-end justify-between gap-4 py-5`}">
                     <div class="${tw`flex justify-center gap-2 whitespace-nowrap`}">
                         ${await new Button("Add Project", { onClick: addProjectItem, class: tw`hidden whitespace-nowrap rounded border border-red-400 bg-zinc-50 py-2 px-5 font-bold text-red-400 hover:bg-red-400 hover:text-zinc-50 sm:inline-block`, title: "Add Project" }).mount(this)}

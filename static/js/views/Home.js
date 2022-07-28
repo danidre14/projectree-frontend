@@ -4,7 +4,7 @@ export default class Homepage extends DCL {
     async render() {
         return `
 <div class="${tw`flex h-full flex-grow flex-col`}">
-    <div class="${tw`container mx-auto flex flex-grow flex-col px-12`}">
+    <div class="${tw`container mx-auto flex flex-grow flex-col px-4 sm:px-12`}">
         <div
             class="${tw`flex-w flex flex-col-reverse items-center justify-center gap-0 space-y-6 pb-8 sm:justify-between sm:gap-8 md:flex-row md:space-y-0 md:pb-0`}">
             <div
@@ -17,7 +17,7 @@ export default class Homepage extends DCL {
                         Showcase</span>
                     <span class="${tw`block leading-tight`}">in 5 minutes!</span>
                 </p>
-                <div class="${tw`px-12 md:mt-3 md:px-2`}">
+                <div class="${tw`px-4 sm:px-12 md:mt-3 md:px-2`}">
                     <p
                         class="${tw`text-base font-normal text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl`}">
                         Create and showcase your projects lists without the hassle of building it yourself.

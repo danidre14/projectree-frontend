@@ -18,46 +18,58 @@ export default class App extends DCL {
             routes: [
                 {
                     path: "/",
-                    title: "Projectree",
+                    title: "Projectree | Home",
                     description: "Projectree helps you create your project showcase in as little as 5 minutes!",
-                    view: async() => await import("./views/Homepage.js")
+                    view: async() => await import("./views/Home.js")
                 },
                 {
                     path: "/create",
-                    title: "Create",
+                    title: "Projectree | Create Projectree",
                     description: "Create a Projectree.",
                     view: async() => await import("./views/DesignTree.js"),
                     props: { editing: false }
                 },
                 {
                     path: "/edit/:projectreeId",
-                    title: "Edit",
+                    title: "Projectree | Edit Projectree",
                     description: "Edit your Projectree.",
                     view: async() => await import("./views/DesignTree.js"),
                     props: { editing: true }
                 },
                 {
                     path: "/signin",
-                    title: "Sign In",
+                    title: "Projectree | Sign In",
                     description: "Sign into your Projectree account.",
                     view: async() => await import("./views/SignIn.js")
                 },
                 {
                     path: "/signup",
-                    title: "Sign Up",
+                    title: "Projectree | Sign Up",
                     description: "Sign up for a Projectree account.",
                     view: async() => await import("./views/SignUp.js")
                 },
                 {
                     path: "/view/:code",
-                    title: "View Projectree",
+                    title: "Projectree | View Projectree",
                     view: async() => await import("./views/ViewProjectree.js")
                 },
                 {
                     path: "/dashboard",
-                    title: "Dashboard",
+                    title: "Projectree | Dashboard",
                     description: "Edit, publish, or delete your Projectree drafts.",
                     view: async() => await import("./views/Dashboard.js")
+                },
+                {
+                    path: "/legal/privacy",
+                    title: "Projectree | Privacy Policy",
+                    description: "Projectree privacy policy.",
+                    view: async() => await import("./views/Privacy.js")
+                },
+                {
+                    path: "/legal/tos",
+                    title: "Projectree | Terms of Service",
+                    description: "Projectree terms of service.",
+                    view: async() => await import("./views/TOS.js")
                 },
             ],
             defaultRoute: {

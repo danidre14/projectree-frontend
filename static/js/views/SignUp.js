@@ -76,11 +76,11 @@ export default class Dashboard extends DCL {
 		<!-- Confirm Email Page -->
 <div class="${tw`flex h-full flex-grow flex-col`}">
 	<div class="${tw`border-b border-zinc-200 bg-zinc-50`}">
-		<div class="${tw`container mx-auto py-5 px-12`}">
+		<div class="${tw`container mx-auto py-5 px-4 sm:px-12`}">
 			<h1 class="${tw`text-4xl font-semibold`}">Confirm Email</h1>
 		</div>
 	</div>
-	<form class="${tw`container mx-auto flex-grow px-12`}">
+	<form class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
 		<div class="${tw`flex h-full flex-col gap-12 py-12`}">
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
@@ -99,7 +99,7 @@ export default class Dashboard extends DCL {
 			</div>
 		</div>
 	</form>
-	<div class="${tw`container sticky bottom-0 mx-auto bg-zinc-50 px-12`}">
+	<div class="${tw`container sticky bottom-0 mx-auto bg-zinc-50 px-4 sm:px-12`}">
 		<div class="${tw`container mx-auto flex py-5`}">
 			<div class="${tw`ml-auto whitespace-nowrap`}">
 				${await new Button("Confirm", { class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800`, onClick: submitConfirmationForm }).mount(this)}
@@ -109,11 +109,11 @@ export default class Dashboard extends DCL {
 </div>` : `
 <div class="${tw`flex h-full flex-grow flex-col`}">
 	<div class="${tw`border-b border-zinc-200 bg-zinc-50`}">
-		<div class="${tw`container mx-auto py-5 px-12`}">
+		<div class="${tw`container mx-auto py-5 px-4 sm:px-12`}">
 			<h1 class="${tw`text-4xl font-semibold`}">Sign Up</h1>
 		</div>
 	</div>
-	<form class="${tw`container mx-auto flex-grow px-12`}">
+	<form class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
 		<div class="${tw`flex h-full flex-col gap-12 py-12`}">
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
@@ -166,7 +166,7 @@ export default class Dashboard extends DCL {
 			</p>
 		</div>
 	</form>
-	<div class="${tw`container sticky bottom-0 mx-auto bg-zinc-50 px-12`}">
+	<div class="${tw`container sticky bottom-0 mx-auto bg-zinc-50 px-4 sm:px-12`}">
 		<div class="${tw`container mx-auto flex py-5`}">
 			<div class="${tw`ml-auto whitespace-nowrap`}">
 				${await new Button("Sign Up", { class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800`, onClick: submitRegistrationForm }).mount(this)}

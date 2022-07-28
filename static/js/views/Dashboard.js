@@ -51,7 +51,7 @@ export default class Dashboard extends DCL {
         return `
 <div class="${tw`flex h-full flex-grow flex-col`}">
     <div class="${tw`border-b border-zinc-200 bg-zinc-50`}">
-        <div class="${tw`container mx-auto flex flex-row items-center justify-between gap-4 py-5 sm:items-end px-12`}">
+        <div class="${tw`container mx-auto flex flex-row items-center justify-between gap-4 py-5 sm:items-end px-4 sm:px-12`}">
             <h1 class="${tw`text-4xl font-semibold`}">Dashboard</h1>
             <div class="${tw`text-right`}">
                 ${await new Link("Create", { to: "/create", class: tw`hidden whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800 sm:inline-block` }).mount(this)}
@@ -64,7 +64,7 @@ export default class Dashboard extends DCL {
             </div>
         </div>
     </div>
-    <div class="${tw`container mx-auto mt-6 flex flex-grow flex-col px-12`}">
+    <div class="${tw`container mx-auto mt-6 flex flex-grow flex-col px-4 sm:px-12`}">
         <div class="${tw`flex h-full flex-grow flex-col gap-8 py-5`}">
         ${(await Promise.all(projectrees.map(async projectree => (
             `<div class="${tw`flex items-end justify-between gap-4 sm:grid sm:grid-cols-3`}" data-id="${projectree.id}">

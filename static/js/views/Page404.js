@@ -13,11 +13,11 @@ export default class Page404 extends DCL {
         return `
 <div class="${tw`flex h-full flex-grow flex-col`}">
     <div class="${tw`border-b border-zinc-200 bg-zinc-50`}">
-        <div class="${tw`container mx-auto py-5 px-12`}">
+        <div class="${tw`container mx-auto py-5 px-4 sm:px-12`}">
             <h1 class="${tw`text-4xl font-semibold`}">404 - Page Not Found</h1>
         </div>
     </div>
-    <div class="${tw`container mx-auto flex-grow px-12`}">
+    <div class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
         <div class="${tw`flex h-full flex-col gap-12 py-12`}">
             <div>
                 <p class="${tw`text-lg sm:text-xl`}">The page requested at "${this.path}" could not be found.</p>

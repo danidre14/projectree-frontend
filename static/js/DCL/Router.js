@@ -48,7 +48,6 @@ export default class Router extends DCL {
                 await this.run();
             }
         } catch (e) {
-            console.warn(e);
             window.open(url, "_blank").focus();
         }
     };
