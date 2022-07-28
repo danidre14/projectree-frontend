@@ -7,10 +7,18 @@ export default class Footer extends DCL {
         this.props.loggedIn = true;
     }
 
+    async onMount() {
+        this.monitorContext("viewing_projectree", (value) => {
+            this.props.hidden = value;
+        });
+    }
+
     async render() {
+        const hiddenText = this.props.hidden ? "hidden" : "";
+
         return `
 <footer>
-    <div class="${tw`border-t border-zinc-300 bg-zinc-50 p-5 px-12 text-stone-700 shadow`}">
+    <div class="${tw`border-t ${hiddenText} border-zinc-300 bg-zinc-50 p-5 px-12 text-stone-700 shadow`}">
         <div class="${tw`container mx-auto flex items-center justify-between`}">
             <div>
                 ${await new Link(`

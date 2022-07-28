@@ -18,7 +18,7 @@ export default class App extends DCL {
             routes: [
                 {
                     path: "/",
-                    title: "Homepage",
+                    title: "Projectree",
                     description: "Projectree helps you create your project showcase in as little as 5 minutes!",
                     view: async() => await import("./views/Homepage.js")
                 },
@@ -47,6 +47,11 @@ export default class App extends DCL {
                     title: "Sign Up",
                     description: "Sign up for a Projectree account.",
                     view: async() => await import("./views/SignUp.js")
+                },
+                {
+                    path: "/view/:code",
+                    title: "View Projectree",
+                    view: async() => await import("./views/ViewProjectree.js")
                 },
                 {
                     path: "/dashboard",

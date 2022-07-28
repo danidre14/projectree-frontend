@@ -10,17 +10,13 @@ export default class Nav extends DCL {
     }
 
     async onMount() {
-        await super.onMount();
-
         this.monitorContext("loggedIn", (value) => {
             this.props.loggedIn = value;
         });
 
-
-    }
-
-    async onUnmount() {
-        await super.onUnmount();
+        this.monitorContext("viewing_projectree", (value) => {
+            this.props.hidden = value;
+        });
     }
 
     async render() {
@@ -28,8 +24,10 @@ export default class Nav extends DCL {
             attemptSignOut();
         });
 
+        const hiddenText = this.props.hidden ? "hidden" : "";
+
         return this.props.loggedIn ? `
-<nav class="${tw`sticky top-0 z-30 border-b border-zinc-300 bg-zinc-50 py-4 px-12 text-red-600 shadow-sm`}">
+<nav class="${tw`sticky ${hiddenText} top-0 z-30 border-b border-zinc-300 bg-zinc-50 py-4 px-12 text-red-600 shadow-sm`}">
     <div class="${tw`container mx-auto flex items-center justify-between gap-4`}">
         <div class="${tw`w-full`}">
             ${await new Link(`
@@ -48,7 +46,7 @@ export default class Nav extends DCL {
 
             :
             `
-<nav class="${tw`sticky top-0 z-30 border-b border-zinc-300 bg-zinc-50 py-4 px-12 text-red-600 shadow-sm`}">
+<nav class="${tw`sticky ${hiddenText} top-0 z-30 border-b border-zinc-300 bg-zinc-50 py-4 px-12 text-red-600 shadow-sm`}">
     <div class="${tw`container mx-auto flex items-center justify-between`}">
     <div>
         ${await new Link(

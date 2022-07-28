@@ -16,16 +16,12 @@ export default class Router extends DCL {
     }
 
     async onMount() {
-        await super.onMount();
-
         DCL.onEvent("navigateTo", this.navigateTo);
         DCL.onEvent("ignoreRoute", this._goTo404);
         window.addEventListener("beforeunload", this._beforeUnload);
     }
 
     async onUnmount() {
-        await super.onUnmount();
-
         DCL.offEvent("navigateTo", this.navigateTo);
         DCL.offEvent("ignoreRoute", this._goTo404);
         window.removeEventListener("beforeunload", this._beforeUnload);

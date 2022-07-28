@@ -4,7 +4,6 @@ import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
 export default class Dashboard extends DCL {
     constructor(props) {
         super(props);
-        this.setTitle("Dashboard");
 
         this.loggedIn = getContext("loggedIn");
         if (!this.loggedIn) {

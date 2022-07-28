@@ -165,13 +165,13 @@ class Component {
         this.constructor.onContext(key, callback, this, ...args);
     }
 
-    setState(key, state) {
+    setState(key, value) {
         const funcID = `stateID_${this.dclId}_${this._generateUID()}`;
 
         if (!this.rendered) return;
         this.constructor.setStatePool[funcID] = async (event) => {
             const prevStateSignature = JSON.stringify(this.state);
-            if (state === undefined) {
+            if (value === undefined) {
                 const prevState = JSON.parse(JSON.stringify(this.state));
                 const newState = typeof key === "function" ? await key(prevState, event) : key;
                 try {
@@ -183,7 +183,7 @@ class Component {
                 } catch (e) { }
             } else {
                 const prevState = JSON.parse(JSON.stringify(this.state[key] || {}));
-                this.state[key] = typeof state === "function" ? await state(prevState, event) : state;
+                this.state[key] = typeof value === "function" ? await value(prevState, event) : value;
             }
             const newStateSignature = JSON.stringify(this.state);
             if (prevStateSignature !== newStateSignature) {
@@ -214,13 +214,9 @@ class Component {
         return `DCL.createFuncPool.${funcID}(event)`;
     }
 
-    async onMount() {
+    async onMount() {}
 
-    }
-
-    async onUnmount() {
-
-    }
+    async onUnmount() {}
 
     async mount(parent) {
         this.mounted = true;

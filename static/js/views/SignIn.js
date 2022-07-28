@@ -6,7 +6,6 @@ import { makeString } from "../utils/helperUtils.js";
 export default class Dashboard extends DCL {
 	constructor(props) {
 		super(props);
-		this.setTitle("Sign In");
 
 		this.loggedIn = getContext("loggedIn");
 		if (this.loggedIn) {
@@ -20,10 +19,6 @@ export default class Dashboard extends DCL {
 	}
 
 	async onMount() {
-		// const hi = this.setState("count", this.state.count + 5);
-		// await window.asyncWait(1000);
-
-		// DCL.triggerFunc(hi);
 	}
 
 	async render() {
