@@ -71,7 +71,7 @@ export default class Nav extends DCL {
 
 async function attemptSignOut() {
     try {
-		const res = await del("/auth/logout");
+		const res = await get("/auth/logout");
 
 		if (res.success) {
             clearContext("loggedIn");

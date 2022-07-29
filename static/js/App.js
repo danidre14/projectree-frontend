@@ -103,16 +103,16 @@ export default class App extends DCL {
 
 async function checkLoggedIn() {
     try {
-        const res = await get("/auth/loggedIn");
+        // const res = await get("/auth/loggedIn");
 
-        console.log("trying to be signed in")
+        // console.log("trying to be signed in")
 
-        if (res.success) {
-            setContext("loggedIn", true);
-            localStorage.setItem("loggedIn", true);
-        } else {
-            setContext("loggedIn", false);
-            localStorage.setItem("loggedIn", false);
-        }
+        // if (res.success) {
+        //     setContext("loggedIn", true);
+        //     localStorage.setItem("loggedIn", true);
+        // } else {
+        //     setContext("loggedIn", false);
+        //     localStorage.setItem("loggedIn", false);
+        // }
     } catch (e) {}
 }
