@@ -1,6 +1,6 @@
 import DCL, { Button, navigateTo, ignoreRoute, getContext, setContext, triggerFunc, useParams } from "../DCL/core.js";
 
-import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
 import generateZippedProjectree from "../utils/generateProjectree.js";
 

@@ -1,5 +1,5 @@
 import DCL, { Button, Link, getContext, setContext, clearContext, navigateTo } from "../DCL/core.js";
-import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
 import { makeString } from "../utils/helperUtils.js";
 
@@ -13,7 +13,7 @@ export default class Dashboard extends DCL {
 		}
 
 		this.state = {
-			username: "",
+			email: "",
 			password: ""
 		}
 	}
@@ -44,12 +44,12 @@ export default class Dashboard extends DCL {
 		<div class="${tw`flex h-full flex-col gap-12 py-12`}">
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="account_username" class="${tw`text-xl italic text-neutral-600`}">Username</label>
-					<input onchange="${setLoginState}" type="text" autocomplete="username" id="username" class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}" name="username" value="${this.state.username}" />
+					<label for="email" class="${tw`text-xl italic text-neutral-600`}">Email</label>
+					<input onchange="${setLoginState}" type="email" autocomplete="username" id="email" class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}" name="email" value="${this.state.email}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="account_password" class="${tw`text-xl italic text-neutral-600`}">Password</label>
-					<input onchange="${setLoginState}" type="password" autocomplete="current-password" id="password" class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}" name="password" value="${this.state.password}" />
+					<input onchange="${setLoginState}" type="password" autocomplete="current-password" id="account_password" class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}" name="password" value="${this.state.password}" />
 				</div>
 			</div>	
 			<p class="${tw`italic`}">
@@ -71,12 +71,12 @@ export default class Dashboard extends DCL {
 }
 
 async function attemptSignIn(data) {
-	let { username = "", password = "" } = data;
-	username = makeString(username);
+	let { email = "", password = "" } = data;
+	email = makeString(email);
 	password = makeString(password);
 
-	if (!username) {
-		alert("Username field required.");
+	if (!email) {
+		alert("Email field required.");
 		return;
 	}
 	if (!password) {
@@ -85,7 +85,7 @@ async function attemptSignIn(data) {
 	}
 
 	try {
-		const res = await post("/auth/signin", { username, password });
+		const res = await post("/auth/login", { email, password });
 
 		if (res.success) {
 			setContext("loggedIn", true);
@@ -93,8 +93,8 @@ async function attemptSignIn(data) {
 			clearContext("signInReferrer");
 			navigateTo(successLink);
 		} else {
-			if (res.message)
-				alert(res.message);
+			if (res.detail)
+				alert(res.detail);
 		}
 	} catch (e) {
 		alert("Sign in failed");

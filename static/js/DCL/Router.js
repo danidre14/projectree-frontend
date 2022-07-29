@@ -11,6 +11,8 @@ export default class Router extends DCL {
         this.routeList = [];
         this.view = null;
 
+        this.middlewares = props.middlewares || [];
+
         this.init(props.routes);
 
     }
@@ -101,19 +103,8 @@ export default class Router extends DCL {
         DCL.params = params;
         DCL.query = query;
 
-        this.view = loading.default ?
-            new loading.default({ ...props, params, query }) :
-            new loading.view({ ...props, params, query });
 
-        if (match.route.title) {
-            this.setTitle(match.route.title);
-            this.setActiveRouteOnElement(match);
-        }
-        if(match.route.description) {
-            this.setDescription(match.route.description);
-        }
-
-        return await this._rerender();
+        return await this._displayView(match, loading, props, params, query);
     };
 
     _goTo404 = async () => {
@@ -131,6 +122,16 @@ export default class Router extends DCL {
         DCL.params = params;
         DCL.query = query;
 
+        return await this._displayView(match, loading, props, params, query);
+    };
+
+    
+
+    _displayView = async (match, loading, props, params, query) => {
+        for(const middleware of this.middlewares)
+            if(typeof middleware === "function")
+                await middleware();
+
         this.view = loading.default ?
             new loading.default({ ...props, params, query }) :
             new loading.view({ ...props, params, query });
@@ -142,9 +143,9 @@ export default class Router extends DCL {
         if(match.route.description) {
             this.setDescription(match.route.description);
         }
-
+        
         return await this._rerender();
-    };
+    }
 
     async render() {
         if (this.view === null) return "";

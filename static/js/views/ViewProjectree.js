@@ -1,5 +1,5 @@
 import DCL, { setContext, clearContext, useParams, ignoreRoute } from "../DCL/core.js";
-import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
 export default class ViewProjectree extends DCL {
     constructor(props) {

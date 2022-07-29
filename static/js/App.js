@@ -1,16 +1,21 @@
 import DCL, { Router, Link, setContext } from "./DCL/core.js";
 import Footer from "./views/components/Footer.js";
 import Nav from "./views/components/Nav.js";
+import { get, post, patch, put, del, cancel } from "./utils/makeRequest.js";
 
 export default class App extends DCL {
     constructor(props) {
         super(props);
 
-        setContext("loggedIn", false);
+        setContext("loggedIn", localStorage.getItem("loggedIn") || false);
 
         this.state = {
 
         }
+    }
+
+    async onMount() {
+        await checkLoggedIn();
     }
 
     async render() {
@@ -78,7 +83,8 @@ export default class App extends DCL {
                 description: "No page found. The link may be broken, or the page does not exist.",
                 view: async() => await import("./views/Page404.js")
             },
-            class: tw`flex h-full flex-grow flex-col`
+            class: tw`flex h-full flex-grow flex-col`,
+            middlewares: [checkLoggedIn]
         });
         return `
         <div class="${tw`flex min-h-screen flex-col`}">
@@ -92,4 +98,20 @@ export default class App extends DCL {
         </div>
         `
     }
+}
+
+async function checkLoggedIn() {
+    try {
+        const res = await get("/auth/loggedIn");
+
+        console.log("trying to be signed in")
+
+        if (res.success) {
+            setContext("loggedIn", true);
+            localStorage.setItem("loggedIn", true);
+        } else {
+            setContext("loggedIn", false);
+            localStorage.setItem("loggedIn", false);
+        }
+    } catch (e) {}
 }

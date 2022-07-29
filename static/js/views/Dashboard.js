@@ -1,5 +1,5 @@
 import DCL, { Button, Link, ignoreRoute, getContext, navigateTo } from "../DCL/core.js";
-import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
 export default class Dashboard extends DCL {
     constructor(props) {

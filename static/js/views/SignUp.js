@@ -1,6 +1,6 @@
 import DCL, { Button, Link, getContext, setContext, navigateTo, useQuery, triggerFunc } from "../DCL/core.js";
 
-import { get, post, patch, put, del, cancel } from "../utils/wrapperFetch.js";
+import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
 import { makeString, isValidPassword } from "../utils/helperUtils.js";
 
@@ -85,7 +85,7 @@ export default class Dashboard extends DCL {
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="email" class="${tw`text-xl italic text-neutral-600`}">Email</label>
-					<input type="text" id="email" name="email"
+					<input type="email" id="email" name="email"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
 						disabled value="${this.state.confirmation.email}" />
 				</div>
@@ -231,15 +231,18 @@ async function attemptRegister(data) {
 
 	try {
 		const res = await post("/auth/register", {
-			first_name, last_name,
-			username, email: email_1, password: password_1
+			first_name,
+			last_name,
+			username,
+			email: email_1,
+			password: password_1
 		});
 
 		if (res.success) {
 			navigateTo("/signin");
 		} else {
-			if (res.message)
-				alert(res.message);
+			if (res.detail)
+				alert(res.detail);
 		}
 	} catch (e) {
 		alert("Sign up failed");
