@@ -11,9 +11,9 @@ export default class ViewProjectree extends DCL {
     }
 
     async onMount() {
-        const { code } = useParams();
+        const { name } = useParams();
         try {
-            const res = await get(`/view/${code}`);
+            const res = await get(`/view-publish/${name}`);
             
             if (res.success) {
                 const projectree = res.data;

@@ -7,12 +7,16 @@ export default class Nav extends DCL {
         super(props);
 
         this.props.loggedIn = getContext("loggedIn");
+        this.props.userEmail = getContext("userEmail") || "";
 
     }
 
     async onMount() {
         this.monitorContext("loggedIn", (value) => {
             this.props.loggedIn = value;
+        });
+        this.monitorContext("userEmail", (value) => {
+            this.props.userEmail = value;
         });
 
         this.monitorContext("viewing_projectree", (value) => {
@@ -37,7 +41,7 @@ export default class Nav extends DCL {
             <span class="${tw`hidden text-3xl font-semibold sm:inline`}">rojectree</span>
             `, { to: "/", class: tw`flex items-center` }).mount(this)}
         </div>
-        <div class="${tw`hidden w-full flex-grow truncate font-medium text-stone-700 sm:inline`}">user@email.com</div>
+        <div class="${tw`hidden w-full flex-grow truncate font-medium text-stone-700 sm:inline`}">${this.props.userEmail}</div>
         <div class="${tw`flex w-full items-center justify-end gap-2 whitespace-nowrap`}">
             ${await new Link("Dashboard", { to: "/dashboard", class: tw`inline-block whitespace-nowrap rounded py-2 px-5 font-semibold text-red-400 border border-red-400 hover:bg-red-400 hover:text-zinc-50` }).mount(this)}
             ${await new Button("Sign Out", { onClick: setSignedOut, class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800` }).mount(this)}
@@ -71,6 +75,8 @@ async function attemptSignOut() {
 
 		if (res.success) {
             clearContext("loggedIn");
+            clearContext("userEmail");
+            localStorage.removeItem("userEmail");
             navigateTo("/");
 		} else {
 			if (res.detail)

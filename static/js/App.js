@@ -8,6 +8,7 @@ export default class App extends DCL {
         super(props);
 
         setContext("loggedIn", localStorage.getItem("loggedIn") || false);
+        setContext("userEmail", localStorage.getItem("userEmail") || "");
 
         this.state = {
 
@@ -54,7 +55,7 @@ export default class App extends DCL {
                     view: async() => await import("./views/SignUp.js")
                 },
                 {
-                    path: "/view/:code",
+                    path: "/view/:name",
                     title: "Projectree | View Projectree",
                     view: async() => await import("./views/ViewProjectree.js")
                 },

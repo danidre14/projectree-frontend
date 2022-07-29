@@ -23,7 +23,7 @@ export default class Dashboard extends DCL {
         if (!this.loggedIn) return;
 
         try {
-            const res = await get("/projectrees", {},);
+            const res = await get("/get-user-projectree");
 
             if (res.success) {
                 this.setState("projectrees", res.data);
@@ -38,8 +38,6 @@ export default class Dashboard extends DCL {
 
         const publishProjectree = this.createFunc((evt) => {
             const id = evt.target.dataset.id;
-
-
         });
 
         const deleteProjectree = this.createFunc((evt) => {

@@ -88,7 +88,10 @@ async function attemptSignIn(data) {
 		const res = await post("/auth/login", { email, password });
 
 		if (res.success) {
+			const email = res.data.user.email;
 			setContext("loggedIn", true);
+			setContext("userEmail", email);
+			localStorage.setItem("userEmail", email);
 			const successLink = getContext("signInReferrer") || "/dashboard";
 			clearContext("signInReferrer");
 			navigateTo(successLink);
