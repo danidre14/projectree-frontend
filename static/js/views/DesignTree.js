@@ -467,6 +467,7 @@ export default class Create extends DCL {
                         const res = await post(`/publish-projectree/${projectreeId}`, { name });
 
                         if (res.success) {
+                            alert("Projectree successfully published!");
                             navigateTo(`/view/${res.data.name}`);
                         } else {
                             if (res.detail)
