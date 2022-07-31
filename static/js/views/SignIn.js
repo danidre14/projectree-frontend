@@ -1,5 +1,5 @@
 import DCL, { Button, Link, getContext, setContext, clearContext, navigateTo, triggerFunc } from "../DCL/core.js";
-import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
+import { get, post, patch, put, del, cancel, signin } from "../utils/makeRequest.js";
 
 import { makeString } from "../utils/helperUtils.js";
 
@@ -91,20 +91,14 @@ async function attemptLogin(data) {
 		if (res.success) {
 			const email = res.data.user.email;
 			const user_id = res.data.user.user_id;
+			const token = res.data.access;
 			const user = {
 				email,
 				id: user_id,
-				token: btoa(`${email}:${password}`)
+				token: token
 			}
-			setContext("loggedIn", true);
-			setContext("user", JSON.stringify(user));
-			setContext("userEmail", user.email);
-			setContext("userId", user.id);
-			localStorage.setItem("loggedIn", true);
-			localStorage.setItem("user", JSON.stringify(user));
-			const successLink = getContext("signInReferrer") || "/dashboard";
-			clearContext("signInReferrer");
-			navigateTo(successLink);
+
+			signin(user);
 		} else {
 			const message = [];
 			if (res.detail)

@@ -187,7 +187,7 @@ export default class Router extends DCL {
         const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(result => result[1]);
 
         return Object.fromEntries(keys.map((key, i) => {
-            return [key, values[i]];
+            return [key, decodeURI(values[i])];
         }));
     };
 

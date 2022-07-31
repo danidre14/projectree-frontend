@@ -38,8 +38,33 @@ export default class Dashboard extends DCL {
     async render() {
         const projectrees = this.state.projectrees;
 
-        const publishProjectree = this.createFunc((evt) => {
-            const id = evt.target.dataset.id;
+        const publishProjectree = this.createFunc(async (evt) => {
+            const projectreeId = evt.target.dataset.id;
+
+            let name = prompt("Enter publish name for projectree");
+            if (name)
+                name = name.trim();
+            else
+                return;
+
+            while (!name) {
+                name = prompt("Enter valid name for projectree");
+                if (name)
+                    name = name.trim();
+                else
+                    return;
+            }
+
+            try {
+                const res = await post(`/publish-projectree/${projectreeId}`, { name });
+
+                if (res.success) {
+                    navigateTo(`/view/${res.data.name}`);
+                } else {
+                    if (res.detail)
+                        alert(res.detail);
+                }
+            } catch { }
         });
 
         const deleteProjectree = this.createFunc(async (evt) => {

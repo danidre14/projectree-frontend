@@ -9,6 +9,9 @@ req.get("/relative_path", params);
 
 */
 
+import { getContext, setContext, clearContext, navigateTo } from "../DCL/core.js";
+
+
 const baseUrl = "https://projectree-app.herokuapp.com/api/v1"; // "http://localhost:5000/api/v1/";
 
 const fetchBus = {};
@@ -83,7 +86,7 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
         multiSignal.addEventListener("abort", internalOnAbort);
         const isGet = method === "GET";
         const user = localStorage.getItem("user");
-        const token = user? JSON.parse(user).token : undefined;
+        const token = user ? JSON.parse(user).token : undefined;
         const options = {
             method,
             headers: {
@@ -97,14 +100,19 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
         } else {
             options.body = JSON.stringify(data);
         }
-        if(token) {
-            options.headers["Authorization"] = `Basic ${token}`;
+        if (token) {
+            options.headers["Authorization"] = `Bearer ${token}`;
         }
         fetch(url, options)
             .then(response => response.json())
             .then((msg) => {
                 removeControllerFromFetchBus(internalControllers);
                 multiSignal.removeEventListener("abort", internalOnAbort);
+
+                if (msg.code && msg.code === "token_not_valid") {
+                    msg.detail = undefined;
+                    signOut(true);
+                }
                 res(msg);
             })
             .catch((err) => {
@@ -144,6 +152,31 @@ function anySignal(signals, externalOnAbort) {
 
     return controller.signal;
 }
+
+function signOut(gotSignedOut) {
+    clearContext("loggedIn");
+    clearContext("user");
+    clearContext("userEmail");
+    clearContext("userId");
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("user");
+    if (gotSignedOut)
+        alert("You have been signed out.");
+    navigateTo("/");
+}
+
+function signIn(user) {
+    setContext("loggedIn", true);
+    setContext("user", JSON.stringify(user));
+    setContext("userEmail", user.email);
+    setContext("userId", user.id);
+    localStorage.setItem("loggedIn", true);
+    localStorage.setItem("user", JSON.stringify(user));
+    const successLink = getContext("signInReferrer") || "/dashboard";
+    clearContext("signInReferrer");
+    navigateTo(successLink);
+}
+
 req.get = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "GET");
 req.post = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "POST");
 req.put = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "PUT");
@@ -159,3 +192,5 @@ export let put = req.put;
 export let patch = req.patch;
 export let del = req.del;
 export let cancel = req.cancel;
+export let signout = signOut;
+export let signin = signIn;

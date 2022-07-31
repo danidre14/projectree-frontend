@@ -23,6 +23,7 @@ export default class Create extends DCL {
             projectSaved: true,
             savingProject: false,
             projectree: {
+                id: null,
                 title: "",
                 favicon: "",
                 theme: "standard",
@@ -124,7 +125,7 @@ export default class Create extends DCL {
         triggerFunc(this.setState("projectree", (prevState) => {
             const newState = { ...prevState, ...projectreeState };
 
-            
+
             return newState;
         }));
 
@@ -203,7 +204,7 @@ export default class Create extends DCL {
         const setProjectItem = this.setState("projectree", (projectreeState, evt) => {
             this.state.projectSaved = false;
 
-            
+
             if (this.loggedIn && this.editing) {
                 const projectItem = projectreeState["project_items"][evt.target.dataset.index];
 
@@ -238,10 +239,26 @@ export default class Create extends DCL {
                 if (!this.editing) {
                     this.state.savingProject = true;
                     // logged in user creating a projectree
-                    let projectreeName = (prompt("Saving Projectree:\n\nEnter projectree name", this.state.projectree.projectree_name) || (this.state.projectree.projectree_name || "Untitled Projectree"));
-                    if (projectreeName.trim() === "") {
-                        projectreeName = "Untitled Projectree"
+                    let name = prompt("Saving Projectree:\n\nEnter projectree name", this.state.projectree.projectree_name);
+                    if (name)
+                        name = name.trim();
+                    else {
+                        this.state.savingProject = false;
+                        return;
                     }
+
+
+                    while (!name) {
+                        name = prompt("Enter valid name for projectree", this.state.projectree.projectree_name);
+                        if (name)
+                            name = name.trim();
+                        else {
+                            this.state.savingProject = false;
+                            return;
+                        }
+                    }
+
+                    const projectreeName = name;
 
                     try {
                         // create projectree in backend
@@ -413,7 +430,7 @@ export default class Create extends DCL {
             }
         });
 
-        const publishProjectree = this.createFunc(() => {
+        const publishProjectree = this.createFunc(async () => {
             if (!this.loggedIn) {
                 const goToSignIn = confirm("You must be signed in to publish your projectree.\n\nSign in now? (Your progress will not be lost)") || false;
 
@@ -427,31 +444,35 @@ export default class Create extends DCL {
                     navigateTo("/signin");
                 }
             } else {
-                if (!this.editing) {
-                    let projectreeName = (prompt("Saving Projectree:\n\nEnter projectree name", this.state.projectree.projectree_name) || (this.state.projectree.projectree_name || "Untitled Projectree"));
-                    if (projectreeName.trim() === "") {
-                        projectreeName = "Untitled Projectree"
+                if (!this.state.projectSaved || !this.state.projectree.id) {
+                    alert("Please save projectree before publishing it.");
+                } else {
+                    const projectreeId = this.state.projectree.id;
+
+                    let name = prompt("Enter publish name for projectree");
+                    if (name)
+                        name = name.trim();
+                    else
+                        return;
+
+                    while (!name) {
+                        name = prompt("Enter valid name for projectree");
+                        if (name)
+                            name = name.trim();
+                        else
+                            return;
                     }
 
-                    /*
-                        sendRequest to save creation
-                        on success: {
-                            // publish project
-                            
-                            let publishedTreeName = (prompt("Publishing Project:\n\nEnter published name", this.state.published_name) || (this.state.published_name || "username_projectree");
-                            if (publishedTreeName.trim() === "") {
-                                publishedTreeName = "username_projectree"
-                            }
-                        }
-                        on fail: alert fail message
-                    */
+                    try {
+                        const res = await post(`/publish-projectree/${projectreeId}`, { name });
 
-                } else {
-                    /*
-                        sendRequest to save edit
-                        on success: navigateTo("/dashboard")
-                        on fail: alert fail message
-                    */
+                        if (res.success) {
+                            navigateTo(`/view/${res.data.name}`);
+                        } else {
+                            if (res.detail)
+                                alert(res.detail);
+                        }
+                    } catch { }
                 }
             }
 

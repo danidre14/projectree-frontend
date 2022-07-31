@@ -1,5 +1,5 @@
 import DCL, { Link, Button, clearContext, getContext, navigateTo } from "../../DCL/core.js";
-import { get, post, patch, put, del, cancel } from "../../utils/makeRequest.js";
+import { get, post, patch, put, del, cancel, signout } from "../../utils/makeRequest.js";
 
 
 export default class Nav extends DCL {
@@ -74,13 +74,7 @@ async function attemptSignOut() {
 		const res = await get("/auth/logout");
 
 		if (res.success) {
-            clearContext("loggedIn");
-            clearContext("user");
-            clearContext("userEmail");
-            clearContext("userId");
-            localStorage.removeItem("loggedIn");
-            localStorage.removeItem("user");
-            navigateTo("/");
+            signout();
 		} else {
 			if (res.detail)
 				alert(res.detail);
