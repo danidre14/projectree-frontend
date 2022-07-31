@@ -48,18 +48,19 @@ export default class Dashboard extends DCL {
 			confirmEmail = true;
 		}
 
-		const submitRegistrationForm = this.createFunc(() => {
+		const submitRegistrationForm = this.createFunc((evt) => {
+			evt.preventDefault();
 			attemptRegister(this.state.registration);
 		});
 
-		const submitConfirmationForm = this.createFunc(() => {
+		const submitConfirmationForm = this.createFunc((evt) => {
+			evt.preventDefault();
 			attemptConfirmation(this.state.confirmation);
 		});
 
 		const setRegistrationState = this.setState("registration", (state, evt) => {
 			const registrationState = state;
 			registrationState[evt.target.name] = evt.target.value;
-
 
 			return registrationState;
 		});
@@ -80,7 +81,7 @@ export default class Dashboard extends DCL {
 			<h1 class="${tw`text-4xl font-semibold`}">Confirm Email</h1>
 		</div>
 	</div>
-	<form class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
+	<form id="confirm_form" class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
 		<div class="${tw`flex h-full flex-col gap-12 py-12`}">
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
@@ -94,7 +95,7 @@ export default class Dashboard extends DCL {
 						Code</label>
 					<input onchange="${setConfirmationState}" type="text" id="code" name="code"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						value="${this.state.confirmation.code}" />
+						value="${this.state.confirmation.code}" ${DCL.autoFocus}/>
 				</div>
 			</div>
 		</div>
@@ -102,7 +103,7 @@ export default class Dashboard extends DCL {
 	<div class="${tw`container sticky bottom-0 mx-auto bg-zinc-50 px-4 sm:px-12`}">
 		<div class="${tw`container mx-auto flex py-5`}">
 			<div class="${tw`ml-auto whitespace-nowrap`}">
-				${await new Button("Confirm", { class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800`, onClick: submitConfirmationForm }).mount(this)}
+				${await new Button("Confirm", { form: "confirm_form", class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800`, onClick: submitConfirmationForm }).mount(this)}
 			</div>
 		</div>
 	</div>
@@ -113,14 +114,14 @@ export default class Dashboard extends DCL {
 			<h1 class="${tw`text-4xl font-semibold`}">Sign Up</h1>
 		</div>
 	</div>
-	<form class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
+	<form id="signup_form" class="${tw`container mx-auto flex-grow px-4 sm:px-12`}">
 		<div class="${tw`flex h-full flex-col gap-12 py-12`}">
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="first_name" class="${tw`text-xl italic text-neutral-600`}">First Name</label>
 					<input onchange="${setRegistrationState}" type="text" id="first_name"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="first_name" value="${this.state.registration.first_name}" />
+						name="first_name" value="${this.state.registration.first_name}" ${DCL.autoFocus}/>
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="last_name" class="${tw`text-xl italic text-neutral-600`}">Last Name</label>
@@ -137,13 +138,13 @@ export default class Dashboard extends DCL {
 				<div class="${tw`hidden sm:block`}"></div>
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="email_1" class="${tw`text-xl italic text-neutral-600`}">Email Address</label>
-					<input onchange="${setRegistrationState}" type="text" id="email_1"
+					<input onchange="${setRegistrationState}" type="email" id="email_1"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
 						name="email_1" value="${this.state.registration.email_1}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="email_2" class="${tw`text-xl italic text-neutral-600`}">Confirm Email</label>
-					<input onchange="${setRegistrationState}" type="text" id="email_2"
+					<input onchange="${setRegistrationState}" type="email" id="email_2"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
 						name="email_2" value="${this.state.registration.email_2}" />
 				</div>
@@ -169,7 +170,7 @@ export default class Dashboard extends DCL {
 	<div class="${tw`container sticky bottom-0 mx-auto bg-zinc-50 px-4 sm:px-12`}">
 		<div class="${tw`container mx-auto flex py-5`}">
 			<div class="${tw`ml-auto whitespace-nowrap`}">
-				${await new Button("Sign Up", { class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800`, onClick: submitRegistrationForm }).mount(this)}
+				${await new Button("Sign Up", { form: "signup_form", class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800`, onClick: submitRegistrationForm }).mount(this)}
 			</div>
 		</div>
 	</div>
@@ -241,8 +242,15 @@ async function attemptRegister(data) {
 		if (res.success) {
 			navigateTo("/signin");
 		} else {
+			const message = [];
 			if (res.detail)
-				alert(res.detail);
+				message.push(res.detail);
+			if (res.password)
+				message.push(res.password);
+			if (res.email)
+				message.push(res.email);
+
+			alert(message.join("\n"));
 		}
 	} catch (e) {
 		alert("Sign up failed");

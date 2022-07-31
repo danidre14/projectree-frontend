@@ -5,14 +5,14 @@
 async function generateZippedProjectree(projectree) {
     projectree = JSON.parse(JSON.stringify(projectree));
 
-    projectree.description =  `Generated Projectree for ${projectree.project_title}`
+    projectree.description =  `Generated Projectree for ${projectree.title}`
 
     console.log("Generating projectree");
 
-    const theme = projectree.project_theme;
-    const title = projectree.project_title || "Generated Projectree";
+    const theme = projectree.theme;
+    const title = projectree.title || "Generated Projectree";
     const description = projectree.description || `Generated Projectree for ${title}`;
-    const favicon = projectree.project_favicon || "assets/default_16x16_favicon.png";
+    const favicon = projectree.favicon || "assets/default_16x16_favicon.png";
 
     const templateHTML = await readTextFile(`/static/templates/${theme}/index.pjtl`);
 
@@ -23,7 +23,7 @@ async function generateZippedProjectree(projectree) {
     generatedHTML = templateHTML;
     generatedHTML = generatedHTML.replaceAll("&lt;!--Projectree-Title--&gt;", title);
     generatedHTML = generatedHTML.replaceAll("&lt;!--Projectree-Description--&gt;", description);
-    generatedHTML = generatedHTML.replaceAll("&lt;!--project_favicon--&gt;", favicon);
+    generatedHTML = generatedHTML.replaceAll("&lt;!--Projectree-Favicon--&gt;", favicon);
     generatedHTML = generatedHTML.replace("const projectree = {};", `const projectree = ${JSON.stringify(projectree)};`);
 
     console.log("Generating Assets");

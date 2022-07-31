@@ -1,4 +1,4 @@
-import DCL, { Link, Button, setContext, getContext, navigateTo } from "../../DCL/core.js";
+import DCL, { Link, Button, clearContext, getContext, navigateTo } from "../../DCL/core.js";
 import { get, post, patch, put, del, cancel } from "../../utils/makeRequest.js";
 
 
@@ -75,14 +75,17 @@ async function attemptSignOut() {
 
 		if (res.success) {
             clearContext("loggedIn");
+            clearContext("user");
             clearContext("userEmail");
-            localStorage.removeItem("userEmail");
+            clearContext("userId");
+            localStorage.removeItem("loggedIn");
+            localStorage.removeItem("user");
             navigateTo("/");
 		} else {
 			if (res.detail)
 				alert(res.detail);
 		}
 	} catch (e) {
-		alert("Sign out failed");
+		alert("Sign out failed" + e);
 	}
 }

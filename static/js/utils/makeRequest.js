@@ -82,6 +82,8 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
         }
         multiSignal.addEventListener("abort", internalOnAbort);
         const isGet = method === "GET";
+        const user = localStorage.getItem("user");
+        const token = user? JSON.parse(user).token : undefined;
         const options = {
             method,
             headers: {
@@ -94,6 +96,9 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
             url += "?" + (new URLSearchParams(data)).toString();
         } else {
             options.body = JSON.stringify(data);
+        }
+        if(token) {
+            options.headers["Authorization"] = `Basic ${token}`;
         }
         fetch(url, options)
             .then(response => response.json())

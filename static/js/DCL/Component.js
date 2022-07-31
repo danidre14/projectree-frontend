@@ -74,10 +74,17 @@ function handleDOMChange(m) {
         }
     }
 
-    const selectedElem = lookupElementByXPath(Component.selectedElement.path);
-    if (selectedElem && selectedElem.matches(selectedElementTypes)) {
-        selectedElem.focus();
-        if (selectedElem.setSelectionRange) selectedElem.setSelectionRange(Component.selectedElement.start, Component.selectedElement.end);
+    let autoFocusedElement = document.querySelector("[data-dcl-autofocus]");
+
+    if (autoFocusedElement) {
+        autoFocusedElement.focus();
+        delete autoFocusedElement.dataset.dclAutofocus;
+    } else {
+        const selectedElem = lookupElementByXPath(Component.selectedElement.path);
+        if (selectedElem && selectedElem.matches(selectedElementTypes)) {
+            selectedElem.focus();
+            if (selectedElem.setSelectionRange) selectedElem.setSelectionRange(Component.selectedElement.start, Component.selectedElement.end);
+        }
     }
 }
 
@@ -214,9 +221,9 @@ class Component {
         return `DCL.createFuncPool.${funcID}(event)`;
     }
 
-    async onMount() {}
+    async onMount() { }
 
-    async onUnmount() {}
+    async onUnmount() { }
 
     async mount(parent) {
         this.mounted = true;
@@ -366,6 +373,14 @@ class Component {
         } catch { }
     }
 
+    static async triggerAsyncFunc(funcCall = "", ...args) {
+        try {
+            const [match, key, funcName] = funcCall.match(/(\w*).(\w*)\(event\)$/);
+            this[key] && this[key][funcName] && await this[key][funcName](...args);
+        } catch { }
+    }
+
+    static autoFocus = "data-dcl-autofocus";
     static eventBus = {};
     static navigateTo(url) {
         this.emitEvent("navigateTo", url);
@@ -492,3 +507,4 @@ export let ignoreRoute = Component.ignoreRoute.bind(Component);
 export let useParams = Component.useParams.bind(Component);
 export let useQuery = Component.useQuery.bind(Component);
 export let triggerFunc = Component.triggerFunc.bind(Component);
+export let triggerAsyncFunc = Component.triggerAsyncFunc.bind(Component);

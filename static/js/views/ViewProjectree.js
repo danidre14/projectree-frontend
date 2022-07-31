@@ -6,7 +6,7 @@ export default class ViewProjectree extends DCL {
         super(props);
 
         this.state = { 
-            content: "Hi"
+            content: ""
         }
     }
 

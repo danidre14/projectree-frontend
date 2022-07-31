@@ -63,10 +63,10 @@ export default class Router extends DCL {
 
         document.body.addEventListener("click", async e => {
             let target = e.target;
-            while (target != document.body && !target.matches("[data-link]") && target.parentElement) {
-                target = target.parentElement;
-            }
-            if (target.matches("[data-link]")) {
+            // while (target != document.body && !target.matches("[data-dcl-link]") && target.parentElement) {
+            //     target = target.parentElement;
+            // }
+            if (target.matches("[data-dcl-link]")) {
                 e.preventDefault();
 
                 await this.navigateTo(target.href);
@@ -171,11 +171,11 @@ export default class Router extends DCL {
 
     setActiveRouteOnElement = (match) => {
         try {
-            Array.from(document.querySelectorAll("[data-link]")).forEach(
+            Array.from(document.querySelectorAll("[data-dcl-link]")).forEach(
                 (el) => el.removeAttribute("data-active")
             );
             document.querySelector(
-                `[data-link][href="${match.route.path}"], [data-link="${match.route.path}"]`
+                `[data-dcl-link][href="${match.route.path}"], [data-dcl-link="${match.route.path}"]`
             ).setAttribute("data-active", "route");
         } catch { }
     }
