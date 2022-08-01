@@ -33,7 +33,6 @@ async function generateZippedProjectree(projectree) {
     const defaultProjectPhoto = await readBlobFile(`/static/templates/${theme}/assets/default_project_photo.png`);
     const twindLib = await readTextFile(`/static/templates/${theme}/libs/twind.umd.js`);
     const twindLibMap = await readTextFile(`/static/templates/${theme}/libs/twind.umd.js.map`);
-    // return
 
     const zip = new JSZip();
     const assetFolder = zip.folder("assets");

@@ -2,6 +2,8 @@ import DCL, { Button, navigateTo, ignoreRoute, getContext, setContext, triggerFu
 
 import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
+import display from "../utils/displayProjectree.js";
+
 import generateZippedProjectree from "../utils/generateProjectree.js";
 
 
@@ -129,13 +131,15 @@ export default class Create extends DCL {
             return newState;
         }));
 
-        this.onReload = (e) => {
-            if (this.state.projectSaved) return;
-            e.preventDefault();
-            e.returnValue = '';
-        }
+        if (this.loggedIn) {
+            this.onReload = (e) => {
+                if (this.state.projectSaved) return;
+                e.preventDefault();
+                e.returnValue = '';
+            }
 
-        DCL.onEvent("beforeNavigate", this.onReload);
+            DCL.onEvent("beforeNavigate", this.onReload);
+        }
     }
 
     async onUnmount() {
@@ -143,17 +147,11 @@ export default class Create extends DCL {
         if (!this.loggedIn && !this.editing) {
             this.state.projectSaved = true;
             saveLocalProjectreeForAnonymous(this.state.projectree);
-        } else if (this.loggedIn) {
-            if (!this.editing) {
-                // then a logged in user is creating a new projectree, so it will remain blank
-            } else {
-                // then a logged in user is editing an existing projectree
-                const { projectreeId } = useParams();
-                // sendRequest to get projectree from server
-            }
         }
 
-        DCL.offEvent("beforeNavigate", this.onReload);
+        if (this.loggedIn) {
+            DCL.offEvent("beforeNavigate", this.onReload);
+        }
     }
 
     async render() {
@@ -163,6 +161,11 @@ export default class Create extends DCL {
         const setProjectreeTitle = this.setState("projectree", (projectreeState, evt) => {
             this.state.projectSaved = false;
             projectreeState["title"] = evt.target.value;
+            return projectreeState;
+        });
+        const setProjectreeTheme = this.setState("projectree", (projectreeState, evt) => {
+            this.state.projectSaved = false;
+            projectreeState["theme"] = evt.target.value;
             return projectreeState;
         });
         const setProjectreeFavicon = this.setState("projectree", (projectreeState, evt) => {
@@ -480,10 +483,11 @@ export default class Create extends DCL {
         });
 
         let projectItems = "";
-        if (this.state.projectree.project_items)
-            for (let i = 0; i < this.state.projectree.project_items.length; i++) {
+        const projectree = this.state.projectree;
+        if (projectree.project_items)
+            for (let i = 0; i < projectree.project_items.length; i++) {
                 const projNum = i + 1;
-                const projectItem = this.state.projectree.project_items[i];
+                const projectItem = projectree.project_items[i];
                 projectItems +=
                     `<div class="${tw`my-12`}">
             <div class="${tw`flex items-end justify-between px-4 pb-4`}">
@@ -545,7 +549,7 @@ export default class Create extends DCL {
                 <div class="${tw`${this.loggedIn ? "" : "hidden"} max-w-sm flex-grow lg:max-w-xs`}">
                     <input type="text" id="projectree_name" name="projectree_name" disabled
                         class="${tw`w-full rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-                        value="${this.state.projectree.projectree_name}" />
+                        value="${projectree.projectree_name}" />
                 </div>
             </div>
         </div>
@@ -558,14 +562,16 @@ export default class Create extends DCL {
                             Title</label>
                         <input type="text" id="title" name="title"
                             class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-                            onchange="${setProjectreeTitle}" value="${this.state.projectree.title}" ${DCL.autoFocus}/>
+                            onchange="${setProjectreeTitle}" value="${projectree.title}"/>
                     </div>
                     <div class="${tw`flex flex-col gap-1`}">
                         <label for="theme" class="${tw`text-xl font-medium italic text-neutral-600`}">Theme</label>
-                        <select id="theme" name="theme"
+                        <select onchange="${setProjectreeTheme}" id="theme" name="theme"
                             class="${tw`rounded-lg border border-zinc-200 py-1 px-3 text-xl`}">
                             <option disabled>Choose a theme</option>
-                            <option selected value="standard">Standard</option>
+                            ${Object.entries(display.themes).map(([key, value]) =>
+                `<option ${key === projectree.theme ? "selected" : ""} value="${key}">${value}</option>`
+            ).join("\n")}
                         </select>
                     </div>
                     <div class="${tw`flex flex-col gap-1`}">
@@ -578,7 +584,7 @@ export default class Create extends DCL {
                             </div>
                             <input type="text" id="favicon" name="favicon"
                                 class="${tw`w-full bg-white py-1 px-1 text-xl outline-none focus:bg-gray-50`}"
-                                onchange="${setProjectreeFavicon}" value="${this.state.projectree.favicon}"/>
+                                onchange="${setProjectreeFavicon}" value="${projectree.favicon}"/>
                         </div>
                     </div>
                 </div>

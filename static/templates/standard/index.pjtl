@@ -27,8 +27,8 @@
 
 			let html = `
 <header>
-  <div class="${tw`flex h-96 items-center justify-center font-bold bg-purple-700 text-white`}">
-    <h1 class="${tw`text-5xl text-center`}">${projectree.title}</h1>
+  <div class="${tw`flex h-72 sm:h-96 items-center justify-center font-bold bg-purple-700 text-white`}">
+    <h1 class="${tw`text-3xl sm:text-5xl text-center`}">${projectree.title}</h1>
   </div>
 </header>
 <main class="${tw`container flex-grow mx-auto`}">
@@ -38,7 +38,7 @@
 				} = project_item;
 				return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
 		<div class="${tw`relative`}">
-			<div class="${tw`flex h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
+			<div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
 				<img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
 			</div>
 			<div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
@@ -64,7 +64,7 @@
 			</div>
 			<div class="${tw`flex flex-col`}">
 			<h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
-			<p class="${tw`flex-grow`}">${description}</p>
+			<p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
 			<div class="${tw`flex flex-wrap gap-2 p-2`}">
 				${programming_language.split(",").map(language => {
 					return `<span class="${tw`inline-flex items-center gap-2 rounded-full bg-blue-300 p-1 pr-2`}">

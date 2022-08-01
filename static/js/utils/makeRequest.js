@@ -5,8 +5,6 @@
 planned syntax:
 req.get("/relative_path", params);
 
-
-
 */
 
 import { getContext, setContext, clearContext, navigateTo } from "../DCL/core.js";
@@ -121,6 +119,10 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
                 if (!internalCancel) {
                     if (err.name == "AbortError")
                         err.reason = internalReason;
+
+                    if (err.message && err.message.includes("Failed to fetch")) {
+                        signOut(true);
+                    }
                     rej(err);
                 }
             });

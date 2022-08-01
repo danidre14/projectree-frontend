@@ -25,7 +25,7 @@ export default class ViewProjectree extends DCL {
                 this.setTitle(title);
                 this.setDescription(description);
 
-                const theme = themes.includes(projectree.theme) ? projectree.theme : "standard";
+                const theme = display.themes[projectree.theme] ? projectree.theme : "standard";
                 DCL.triggerFunc(this.setState("content", display[theme](projectree)));
                 setContext("viewing_projectree", true);
             } else {
@@ -46,5 +46,3 @@ export default class ViewProjectree extends DCL {
         </div>`;
     }
 }
-
-const themes = ["standard"];
