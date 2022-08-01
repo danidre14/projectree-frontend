@@ -43,8 +43,8 @@ export default class Footer extends DCL {
             alt="About Project Icon" title="About Project" />
             <span class="${tw`hidden sm:inline`}">About</span>`, { to: "https://blog.danidre.com/introducing-projectree", class: tw`flex items-center rounded p-2 hover:bg-zinc-200` }).mount(this)}
             ${await new Link(`<img class="${tw`sm:mr-2 h-7 w-7`}" src="/static/images/icons/github-icon.png"
-            alt="Github Source Icon" title="Github Source" />
-            <span class="${tw`hidden sm:inline`}">Github</span>`, { to: "https://github.com/danidre14/projectree_frontend", class: tw`flex items-center rounded p-2 hover:bg-zinc-200` }).mount(this)}
+            alt="GitHub Source Icon" title="GitHub Source" />
+            <span class="${tw`hidden sm:inline`}">GitHub</span>`, { to: "https://github.com/danidre14/projectree_frontend", class: tw`flex items-center rounded p-2 hover:bg-zinc-200` }).mount(this)}
         </div>
     </div>
 </footer>
