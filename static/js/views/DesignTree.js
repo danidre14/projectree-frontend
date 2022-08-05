@@ -2,6 +2,8 @@ import DCL, { Button, navigateTo, ignoreRoute, getContext, setContext, triggerFu
 
 import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
+import { isValidUrl } from "../utils/helperUtils.js";
+
 import display from "../utils/displayProjectree.js";
 
 import generateZippedProjectree from "../utils/generateProjectree.js";
@@ -113,7 +115,6 @@ export default class Create extends DCL {
                         projectreeState.title = remoteState.title;
                         projectreeState.favicon = remoteState.favicon;
                         projectreeState.theme = remoteState.theme;
-                        // TODO get project items somehow
                         projectreeState.project_items = remoteState.project_items;
                     } else {
                         ignoreRoute();
@@ -265,11 +266,16 @@ export default class Create extends DCL {
 
                     try {
                         // create projectree in backend
-
-                        //TODO validate urls on frontend
                         const projectree = this.state.projectree;
+
+                        const isValidTree = validateProjectree(projectree);
+
+                        if(!isValidTree) {
+                            this.state.savingProject = false;
+                            return;
+                        }
+
                         const res = await post("/projectree", {
-                            user: userId,
                             projectree_name: projectreeName,
                             title: projectree.title,
                             favicon: projectree.favicon,
@@ -283,7 +289,6 @@ export default class Create extends DCL {
                             for (const projectItem of projectree.project_items) {
                                 try {
                                     const res = await post("/project", {
-                                        user: userId,
                                         name: projectItem.name,
                                         description: projectItem.description,
                                         programming_language: projectItem.programming_language,
@@ -335,11 +340,16 @@ export default class Create extends DCL {
                     // logged in user editing a projectree
                     try {
                         // update projectree in backend
-
-                        //TODO validate urls on frontend
                         const projectree = this.state.projectree;
+
+                        const isValidTree = validateProjectree(projectree);
+
+                        if(!isValidTree) {
+                            this.state.savingProject = false;
+                            return;
+                        }
+
                         const res = await put(`/update-projectree/${projectree.id}/`, {
-                            user: userId,
                             projectree_name: projectree.projectree_name,
                             title: projectree.title,
                             favicon: projectree.favicon,
@@ -365,7 +375,6 @@ export default class Create extends DCL {
                                 try {
                                     const projectItem = projectree.project_items.find(item => item.id === projectItemId);
                                     await put(`/update-project/${projectItemId}/`, {
-                                        user: userId,
                                         name: projectItem.name,
                                         description: projectItem.description,
                                         programming_language: projectItem.programming_language,
@@ -381,7 +390,6 @@ export default class Create extends DCL {
                             for (const projectItem of addedItems) {
                                 try {
                                     const res = await post("/project", {
-                                        user: userId,
                                         name: projectItem.name,
                                         description: projectItem.description,
                                         programming_language: projectItem.programming_language,
@@ -658,4 +666,32 @@ const saveLocalProjectreeForRegistered = function (projectree) {
     }
     const data = JSON.stringify(localState);
     localStorage.setItem(loggedInCreateProjectreeState, data);
+}
+
+const validateProjectree = function(projectree) {
+    const messages = [];
+
+    // check favicon url
+    if(!isValidUrl(projectree.favicon)) {
+        messages.push("Please enter a valid URL for the favicon.");
+    }
+
+    // check valid project items
+    for(let i = 0; i < projectree.project_items.length; i++) {
+        const index = i + 1;
+        const projectItem = projectree.project_items[i];
+
+        if(!isValidUrl(projectItem.demo_link)) {
+            messages.push(`Please enter a valid URL for project ${index}'s demo link`);
+        }
+        if(!isValidUrl(projectItem.source_code)) {
+            messages.push(`Please enter a valid URL for project ${index}'s source code link`);
+        }
+    }
+
+    if(messages.length) {
+        alert(messages.join("\n"));
+    }
+
+    return messages.length === 0;
 }

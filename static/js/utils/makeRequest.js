@@ -123,6 +123,9 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
                     if (err.message && err.message.includes("Failed to fetch")) {
                         signOut(true);
                     }
+                    if(err.name == "SyntaxError" && err.message.includes("Unexpected token")) {
+                        signOut(true);
+                    }
                     rej(err);
                 }
             });
