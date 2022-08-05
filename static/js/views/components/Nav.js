@@ -80,6 +80,7 @@ async function attemptSignOut() {
 				alert(res.detail);
 		}
 	} catch (e) {
-		alert("Sign out failed" + e);
+        if(e.name != "SyntaxError")
+		alert("Sign out failed: " + e);
 	}
 }
