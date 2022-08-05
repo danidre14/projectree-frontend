@@ -9,7 +9,8 @@ const helperUtils = {
     isValidPassword(password = "") {
         return password.match(/^[\w ]{4,}$/g) !== null;
     },
-    isValidUrl(url) {
+    isValidUrl(url = "") {
+        if(!url) return true;
         try {
             return !!new URL(url);
         } catch {
