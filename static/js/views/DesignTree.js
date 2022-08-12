@@ -521,7 +521,7 @@ export default class Create extends DCL {
                             <img id="project_item_${projNum}_photo_preview" class="${tw`w-full`}"
                                 src="${projectItem.image}" alt="" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" />
                         </div>
-                        <input id="project_item_${projNum}_photo" type="text" name="image" data-index="${i}" placeholder="Photo"
+                        <input id="project_item_${projNum}_photo" type="text" name="image" data-index="${i}" placeholder="Photo Link"
                             class="${tw`w-full border-t bg-white px-3 py-2 italic outline-none focus:bg-gray-50`}" onchange="${setProjectItem}" value="${projectItem.image}" />
                     </div>
                 </div>
