@@ -1,5 +1,5 @@
-import DCL, { Button, Link, getContext, setContext, clearContext, navigateTo, triggerFunc } from "../DCL/core.js";
-import { get, post, patch, put, del, cancel, signin } from "../utils/makeRequest.js";
+import DCL, { Button, Link, getContext, navigateTo } from "../DCL/core.js";
+import { post, signin } from "../utils/makeRequest.js";
 
 import { makeString } from "../utils/helperUtils.js";
 
@@ -7,7 +7,7 @@ export default class Dashboard extends DCL {
 	constructor(props) {
 		super(props);
 
-		this.loggedIn = getContext("loggedIn");
+		this.loggedIn = !!getContext("user");
 		if (this.loggedIn) {
 			navigateTo("/dashboard");
 		}
@@ -86,29 +86,19 @@ async function attemptLogin(data) {
 	}
 
 	try {
-		const res = await post("/auth/login", { email, password });
+		const res = await post("/auth/signin", { email, password });
 
 		if (res.success) {
-			const email = res.data.user.email;
-			const user_id = res.data.user.user_id;
-			const token = res.data.access;
-			const user = {
-				email,
-				id: user_id,
-				token: token
-			}
+			const user = res.data.user;
 
-			signin(user);
+			signin(user, true);
+			if (res.message)
+				alert(res.message);
 		} else {
-			const message = [];
-			if (res.detail)
-				message.push(res.detail);
-			if (res.email)
-				message.push(res.email);
-
-			alert(message.join("\n"));
+			if (res.message)
+				alert(res.message);
 		}
-	} catch (e) {
+	} catch (err) {
 		alert("Sign in failed");
 	}
 }

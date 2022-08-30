@@ -10,7 +10,8 @@ req.get("/relative_path", params);
 import { getContext, setContext, clearContext, navigateTo } from "../DCL/core.js";
 
 
-const baseUrl = "https://projectree-app.herokuapp.com/api/v1"; // "http://localhost:5000/api/v1/";
+// const baseUrl = "https://projectree-app.herokuapp.com/api/v1";
+const baseUrl = "http://127.0.0.1:3000/api/v1";
 
 const fetchBus = {};
 function addKeyToFetchBus(key) {
@@ -74,8 +75,8 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
 
         let internalCancel = false;
         let internalReason = "AbortError";
-        const internalOnAbort = (e) => {
-            const reason = e.reason ? e.reason : (e.target && e.target.reason || "AbortError");
+        const internalOnAbort = (err) => {
+            const reason = err.reason ? err.reason : (err.target && err.target.reason || "AbortError");
             if (reason === "internalCancel") {
                 internalCancel = true;
             }
@@ -83,10 +84,9 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
         }
         multiSignal.addEventListener("abort", internalOnAbort);
         const isGet = method === "GET";
-        const user = localStorage.getItem("user");
-        const token = user ? JSON.parse(user).token : undefined;
         const options = {
             method,
+            credentials: "include",
             headers: {
                 "Content-Type": isGet ? "application/x-www-form-urlencoded" : "application/json",
                 ...externalHeaders
@@ -94,24 +94,26 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
             signal: multiSignal
         };
         if (isGet) {
-            url += "?" + (new URLSearchParams(data)).toString();
+            if ((new URLSearchParams(data)).toString())
+                url += "?" + (new URLSearchParams(data)).toString();
         } else {
             options.body = JSON.stringify(data);
         }
-        if (token) {
-            options.headers["Authorization"] = `Bearer ${token}`;
-        }
         fetch(url, options)
-            .then(response => response.json())
-            .then((msg) => {
+            .then(data => data.json())
+            .then((reply) => {
                 removeControllerFromFetchBus(internalControllers);
                 multiSignal.removeEventListener("abort", internalOnAbort);
 
-                if (msg.code && msg.code === "token_not_valid") {
-                    msg.detail = undefined;
-                    signOut(true);
+                res(reply);
+                if (reply.lightReroute) {
+                    return navigateTo(reply.lightReroute);
                 }
-                res(msg);
+                if (reply.hardReroute) {
+                    navigateTo(reply.hardReroute);
+                    document.location.reload();
+                    return;
+                }
             })
             .catch((err) => {
                 removeControllerFromFetchBus(internalControllers);
@@ -122,9 +124,7 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
 
                     if (err.message && err.message.includes("Failed to fetch")) {
                         signOut(true);
-                    }
-                    if(err.name == "SyntaxError" && err.message.includes("Unexpected token")) {
-                        signOut(true);
+                        console.warn({ err });
                     }
                     rej(err);
                 }
@@ -134,8 +134,8 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
 function anySignal(signals, externalOnAbort) {
     const controller = new AbortController();
 
-    function onAbort(e) {
-        const reason = e.reason ? e.reason : (e.target && e.target.reason || "AbortError");
+    function onAbort(err) {
+        const reason = err.reason ? err.reason : (err.target && err.target.reason || "AbortError");
         controller.abort(reason);
 
         // Cleanup
@@ -158,25 +158,16 @@ function anySignal(signals, externalOnAbort) {
     return controller.signal;
 }
 
-function signOut(gotSignedOut) {
-    clearContext("loggedIn");
+function signOut(notify = false) {
     clearContext("user");
-    clearContext("userEmail");
-    clearContext("userId");
-    localStorage.removeItem("loggedIn");
-    localStorage.removeItem("user");
-    if (gotSignedOut)
-        alert("You have been signed out.");
+    if (!notify) return;
+    alert("You have been signed out.");
     navigateTo("/");
 }
 
-function signIn(user) {
-    setContext("loggedIn", true);
-    setContext("user", JSON.stringify(user));
-    setContext("userEmail", user.email);
-    setContext("userId", user.id);
-    localStorage.setItem("loggedIn", true);
-    localStorage.setItem("user", JSON.stringify(user));
+function signIn(user, redirect = false) {
+    setContext("user", user);
+    if (!redirect) return;
     const successLink = getContext("signInReferrer") || "/dashboard";
     clearContext("signInReferrer");
     navigateTo(successLink);
@@ -189,6 +180,7 @@ req.patch = (path, params, headers, signal) => req(baseUrl + path, params, heade
 req.del = (path, params, headers, signal) => req(baseUrl + path, params, headers, signal, "DELETE");
 req.cancel = (key) => abortRequestByKey(key);
 
+window.signout = signOut
 
 export default req;
 export let get = req.get;

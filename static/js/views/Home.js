@@ -1,6 +1,10 @@
 import DCL, { Link } from "../DCL/core.js";
+import { get } from "../utils/makeRequest.js";
 
 export default class Homepage extends DCL {
+    async onMount() {
+
+    }
     async render() {
         return `
 <div class="${tw`flex h-full flex-grow flex-col`}">

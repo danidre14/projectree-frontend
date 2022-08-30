@@ -3,11 +3,11 @@ import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
 
 import display from "../utils/displayProjectree.js";
 
-export default class ViewProjectree extends DCL {
+export default class ViewPublishtree extends DCL {
     constructor(props) {
         super(props);
 
-        this.state = { 
+        this.state = {
             content: ""
         }
     }
@@ -16,10 +16,10 @@ export default class ViewProjectree extends DCL {
         const { name } = useParams();
         console.log(name)
         try {
-            const res = await get(`/view-publish/${name}`);
-            
+            const res = await get(`/publishtrees/${name}`);
+
             if (res.success) {
-                const projectree = res.data.projectree;
+                const projectree = res.data.publishtree.projectree;
                 const title = projectree.title;
                 const description = projectree.description || `Generated Projectree for ${title}`;
                 this.setTitle(title);

@@ -187,7 +187,7 @@ class Component {
                     } else {
                         this.state = newState;
                     }
-                } catch (e) { }
+                } catch (err) { }
             } else {
                 const prevState = JSON.parse(JSON.stringify(this.state[key] || {}));
                 this.state[key] = typeof value === "function" ? await value(prevState, event) : value;
@@ -244,8 +244,8 @@ class Component {
         this.rendered = true;
         try {
             view = await this.render();
-        } catch (e) {
-            console.warn("Failed mounting component:", e);
+        } catch (err) {
+            console.warn("Failed mounting component:", err);
         }
 
         this.onMount();
@@ -328,12 +328,12 @@ class Component {
                 let view = "";
                 try {
                     view = await this.render();
-                } catch (e) {
-                    console.warn("Failed rerendering component: ", e);
+                } catch (err) {
+                    console.warn("Failed rerendering component: ", err);
                 }
                 frag.outerHTML = this._getFragHTML(view);
             }
-        } catch (e) { }
+        } catch (err) { }
     }
 
 
@@ -427,8 +427,8 @@ class Component {
                 if (confirmNavigate || event.returnValue) return true;
             }
             return false;
-        } catch (e) {
-            console.warn("Error confirming navigate", e)
+        } catch (err) {
+            console.warn("Error confirming navigate", err)
             return false;
         }
     }
@@ -462,6 +462,7 @@ class Component {
         return this.context[key];
     }
     static setContext(key, value) {
+        if (JSON.stringify(value) === JSON.stringify(this.context[key])) return;
         if (value === undefined)
             delete this.context[key];
         else

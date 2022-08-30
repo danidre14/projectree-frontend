@@ -1,27 +1,31 @@
-import DCL, { Link, Button, clearContext, getContext, navigateTo } from "../../DCL/core.js";
-import { get, post, patch, put, del, cancel, signout } from "../../utils/makeRequest.js";
+import DCL, { Link, Button, getContext } from "../../DCL/core.js";
+import { del, signout } from "../../utils/makeRequest.js";
 
 
 export default class Nav extends DCL {
     constructor(props) {
         super(props);
 
-        this.props.loggedIn = getContext("loggedIn");
-        this.props.userEmail = getContext("userEmail") || "";
-
+        const user = getContext("user");
+        this.props.loggedIn = !!user;
+        this.setDisplayName(user);
     }
 
     async onMount() {
-        this.monitorContext("loggedIn", (value) => {
-            this.props.loggedIn = value;
-        });
-        this.monitorContext("userEmail", (value) => {
-            this.props.userEmail = value;
+        this.monitorContext("user", (user) => {
+            this.props.loggedIn = !!user;
+            if (user)
+                this.setDisplayName(user);
         });
 
         this.monitorContext("viewing_projectree", (value) => {
             this.props.hidden = value;
         });
+    }
+
+    setDisplayName(user) {
+        if (user && user.email)
+            this.props.displayName = user.email;
     }
 
     async render() {
@@ -41,7 +45,7 @@ export default class Nav extends DCL {
             <span class="${tw`hidden text-3xl font-semibold sm:inline`}">rojectree</span>
             `, { to: "/", class: tw`flex items-center` }).mount(this)}
         </div>
-        <div class="${tw`hidden w-full flex-grow truncate font-medium text-stone-700 sm:inline`}">${this.props.userEmail}</div>
+        <div class="${tw`hidden w-full flex-grow truncate text-center font-medium text-stone-700 sm:inline`}">${this.props.displayName}</div>
         <div class="${tw`flex w-full items-center justify-end gap-2 whitespace-nowrap`}">
             ${await new Link("Dashboard", { to: "/dashboard", class: tw`inline-block whitespace-nowrap rounded py-2 px-5 font-semibold text-red-400 border border-red-400 hover:bg-red-400 hover:text-zinc-50` }).mount(this)}
             ${await new Button("Sign Out", { onClick: setSignedOut, class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800` }).mount(this)}
@@ -71,16 +75,16 @@ export default class Nav extends DCL {
 
 async function attemptSignOut() {
     try {
-		const res = await get("/auth/logout");
+        const res = await del("/auth/signout");
 
-		if (res.success) {
+        if (res.success) {
             signout();
-		} else {
-			if (res.detail)
-				alert(res.detail);
-		}
-	} catch (e) {
-        if(e.name != "SyntaxError")
-		alert("Sign out failed: " + e);
-	}
+        } else {
+            if (res.message)
+                alert(res.message);
+        }
+    } catch (err) {
+        if (err.name != "SyntaxError")
+            alert("Sign out failed: " + err);
+    }
 }

@@ -29,10 +29,10 @@ export default class Router extends DCL {
         window.removeEventListener("beforeunload", this._beforeUnload);
     }
 
-    _beforeUnload(e) {
+    _beforeUnload(evt) {
         if (DCL._confirmNavigate()) {
-            e.preventDefault();
-            e.returnValue = '';
+            evt.preventDefault();
+            evt.returnValue = '';
         } else {
             return;
         }
@@ -49,7 +49,7 @@ export default class Router extends DCL {
                 history.pushState(null, null, url);
                 await this.run();
             }
-        } catch (e) {
+        } catch (err) {
             window.open(url, "_blank").focus();
         }
     };
@@ -125,11 +125,11 @@ export default class Router extends DCL {
         return await this._displayView(match, loading, props, params, query);
     };
 
-    
+
 
     _displayView = async (match, loading, props, params, query) => {
-        for(const middleware of this.middlewares)
-            if(typeof middleware === "function")
+        for (const middleware of this.middlewares)
+            if (typeof middleware === "function")
                 await middleware();
 
         this.view = loading.default ?
@@ -140,10 +140,10 @@ export default class Router extends DCL {
             this.setTitle(match.route.title);
             this.setActiveRouteOnElement(match);
         }
-        if(match.route.description) {
+        if (match.route.description) {
             this.setDescription(match.route.description);
         }
-        
+
         return await this._rerender();
     }
 

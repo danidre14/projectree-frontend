@@ -1,24 +1,24 @@
-import DCL, { Button, Link, getContext, setContext, navigateTo, useQuery, triggerFunc } from "../DCL/core.js";
+import DCL, { Button, Link, getContext, navigateTo, useQuery, triggerFunc } from "../DCL/core.js";
 
-import { get, post, patch, put, del, cancel } from "../utils/makeRequest.js";
+import { post } from "../utils/makeRequest.js";
 
-import { makeString, isValidPassword } from "../utils/helperUtils.js";
+import { makeString } from "../utils/helperUtils.js";
 
 export default class Dashboard extends DCL {
 	constructor(props) {
 		super(props);
 
-		this.loggedIn = getContext("loggedIn");
+		this.loggedIn = !!getContext("user");
 		if (this.loggedIn) {
 			navigateTo("/dashboard");
 		}
 
 		this.state = {
 			registration: {
-				first_name: "", last_name: "",
+				firstName: "", lastName: "",
 				username: "",
-				email_1: "", email_2: "",
-				password_1: "", password_2: ""
+				email1: "", email2: "",
+				password1: "", password2: ""
 			},
 			confirmation: {
 				email: "", code: ""
@@ -95,7 +95,7 @@ export default class Dashboard extends DCL {
 						Code</label>
 					<input onchange="${setConfirmationState}" type="text" id="code" name="code"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						value="${this.state.confirmation.code}" ${DCL.autoFocus}/>
+						value="${this.state.confirmation.code}" ${DCL.autoFocuss || ""}/>
 				</div>
 			</div>
 		</div>
@@ -118,16 +118,16 @@ export default class Dashboard extends DCL {
 		<div class="${tw`flex h-full flex-col gap-12 py-12`}">
 			<div class="${tw`grid gap-12 sm:grid-cols-2 xl:w-2/3`}">
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="first_name" class="${tw`text-xl italic text-neutral-600`}">First Name</label>
-					<input onchange="${setRegistrationState}" type="text" id="first_name"
+					<label for="firstName" class="${tw`text-xl italic text-neutral-600`}">First Name</label>
+					<input onchange="${setRegistrationState}" type="text" id="firstName"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="first_name" value="${this.state.registration.first_name}" ${DCL.autoFocus}/>
+						name="firstName" value="${this.state.registration.firstName}" ${DCL.autoFocuss || ""}/>
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="last_name" class="${tw`text-xl italic text-neutral-600`}">Last Name</label>
-					<input onchange="${setRegistrationState}" type="text" id="last_name"
+					<label for="lastName" class="${tw`text-xl italic text-neutral-600`}">Last Name</label>
+					<input onchange="${setRegistrationState}" type="text" id="lastName"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="last_name" value="${this.state.registration.last_name}" />
+						name="lastName" value="${this.state.registration.lastName}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
 					<label for="username" class="${tw`text-xl italic text-neutral-600`}">Username</label>
@@ -137,28 +137,28 @@ export default class Dashboard extends DCL {
 				</div>
 				<div class="${tw`hidden sm:block`}"></div>
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="email_1" class="${tw`text-xl italic text-neutral-600`}">Email Address</label>
-					<input onchange="${setRegistrationState}" type="email" id="email_1"
+					<label for="email1" class="${tw`text-xl italic text-neutral-600`}">Email Address</label>
+					<input onchange="${setRegistrationState}" type="email" id="email1"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="email_1" value="${this.state.registration.email_1}" />
+						name="email1" value="${this.state.registration.email1}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="email_2" class="${tw`text-xl italic text-neutral-600`}">Confirm Email</label>
-					<input onchange="${setRegistrationState}" type="email" id="email_2"
+					<label for="email2" class="${tw`text-xl italic text-neutral-600`}">Confirm Email</label>
+					<input onchange="${setRegistrationState}" type="email" id="email2"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="email_2" value="${this.state.registration.email_2}" />
+						name="email2" value="${this.state.registration.email2}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="password_1" class="${tw`text-xl italic text-neutral-600`}">Password</label>
-					<input onchange="${setRegistrationState}" type="password" autocomplete="new-password" id="password_1"
+					<label for="password1" class="${tw`text-xl italic text-neutral-600`}">Password</label>
+					<input onchange="${setRegistrationState}" type="password" autocomplete="new-password" id="password1"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="password_1" value="${this.state.registration.password_1}" />
+						name="password1" value="${this.state.registration.password1}" />
 				</div>
 				<div class="${tw`flex flex-col gap-1`}">
-					<label for="password_2" class="${tw`text-xl italic text-neutral-600`}">Confirm Password</label>
-					<input onchange="${setRegistrationState}" type="password" autocomplete="new-password" id="password_2"
+					<label for="password2" class="${tw`text-xl italic text-neutral-600`}">Confirm Password</label>
+					<input onchange="${setRegistrationState}" type="password" autocomplete="new-password" id="password2"
 						class="${tw`rounded-lg border border-zinc-200 bg-white py-1 px-3 text-xl outline-none focus:bg-gray-50`}"
-						name="password_2" value="${this.state.registration.password_2}" />
+						name="password2" value="${this.state.registration.password2}" />
 				</div>
 			</div>
 			<p class="${tw`italic`}">
@@ -180,80 +180,100 @@ export default class Dashboard extends DCL {
 
 async function attemptRegister(data) {
 	let {
-		first_name = "", last_name = "",
+		firstName = "", lastName = "",
 		username = "",
-		email_1 = "", email_2 = "",
-		password_1 = "", password_2 = ""
+		email1 = "", email2 = "",
+		password1 = "", password2 = ""
 	} = data;
 
-	first_name = makeString(first_name);
-	last_name = makeString(last_name);
-	username = makeString(username);
-	email_1 = makeString(email_1);
-	email_2 = makeString(email_2);
-	password_1 = makeString(password_1);
-	password_2 = makeString(password_2);
+	firstName = makeString(firstName);
+	lastName = makeString(lastName);
+	username = makeString(username).toLowerCase();
+	email1 = makeString(email1).toLowerCase();
+	email2 = makeString(email2).toLowerCase();
+	password1 = makeString(password1);
+	password2 = makeString(password2);
 
-	if (!first_name) {
+	if (!firstName) {
 		alert("First name field required");
 		return;
 	}
-	if (!last_name) {
+	if (!lastName) {
 		alert("Last name field required");
 		return;
 	}
+
 	if (!username) {
 		alert("Username field required");
 		return;
 	}
-	if (!email_1 || !email_2) {
+	if (username.length < 4 || username.length > 15) {
+		alert("Username must be 4-15 characters long");
+		return;
+	} else {
+		if (username.charAt(0).match(/^[a-z]+$/ig) === null) {
+			alert("Username must start with a letter\n");
+			return;
+		} else if (username.match(/^[a-z][a-z\d]+$/ig) === null) {
+			alert("Symbols/Spaces not allowed in username");
+			return;
+		}
+	}
+
+	if (!email1 || !email2) {
 		alert("Email fields required");
 		return;
 	}
-	if (!password_1 || !password_2) {
+
+	if (!password1 || !password2) {
 		alert("Password fields required");
 		return;
 	}
+	if (password1.length < 8) {
+		alert("Password must be 8 or more characters\n");
+		return;
+	}
+	if (password1.search(/\d/) === -1) {
+		alert("Password must contain at least one number\n");
+		return;
+	}
+	if (password1.search(/[A-Z]/) === -1) {
+		alert("Password must contain at least one uppercase letter\n");
+		return;
+	}
 
-	if (email_1 !== email_2) {
+	if (email1 !== email2) {
 		alert("Emails do not match");
 		return;
 	}
 
-	if (password_1 !== password_2) {
+	if (password1 !== password2) {
 		alert("Passwords do not match");
 		return;
 	}
 
-	if (!isValidPassword(password_1)) {
-		alert("Password must be 4 or more alphanumeric characters");
-		return;
-	}
-
 	try {
-		const res = await post("/auth/register", {
-			first_name,
-			last_name,
+		const res = await post("/auth/signup", {
+			firstName,
+			lastName,
 			username,
-			email: email_1,
-			password: password_1
+			email1,
+			email2,
+			password1,
+			password2
 		});
 
 		if (res.success) {
-			navigateTo("/signin");
+			// navigateTo("/signin");
+			if (res.message)
+				alert(res.message);
 		} else {
-			const message = [];
-			if (res.detail)
-				message.push(res.detail);
-			if (res.password)
-				message.push(res.password);
-			if (res.email)
-				message.push(res.email);
-
-			alert(message.join("\n"));
+			if (res.message)
+				alert(res.message);
 		}
-	} catch (e) {
-		alert("Sign up failed");
+	} catch (err) {
+		alert("Sign up failed: ", err);
+		console.error(err)
 	}
 }
 

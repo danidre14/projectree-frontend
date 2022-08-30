@@ -91,7 +91,7 @@ As Projectree's frontend is a single page application (SPA), all unknown (404) r
 
 3. Run `netlify dev` in your local terminal to start the project locally.
 
-Open a browser and hit `"http://localhost:3000"` or localhost at the set port in your `netlify.toml` file.
+Open a browser and hit `"http://127.0.0.1:3000"` or localhost at the set port in your `netlify.toml` file.
 
 4. [Deploy](https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/) your frontend to netlify.
 

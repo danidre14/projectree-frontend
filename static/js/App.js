@@ -1,27 +1,15 @@
-import DCL, { Router, Link, setContext } from "./DCL/core.js";
+import DCL, { Router } from "./DCL/core.js";
 import Footer from "./views/components/Footer.js";
 import Nav from "./views/components/Nav.js";
-import { get, post, patch, put, del, cancel } from "./utils/makeRequest.js";
+import { get, signin, signout } from "./utils/makeRequest.js";
 
 export default class App extends DCL {
     constructor(props) {
         super(props);
 
-        const userS = localStorage.getItem("user");
-
-        const user = userS ? JSON.parse(userS) : undefined;
-
-        setContext("loggedIn", localStorage.getItem("loggedIn") || false);
-        
-        if(user) {
-            setContext("user", user);
-            setContext("userEmail", user.email);
-            setContext("userId", user.id);
-        }
-
-        this.state = {
-
-        }
+        // removing for backward compatibility: I don't use localstorage anymore for authentication so wanna clean up this space on client devices that already store it.
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("user");
     }
 
     async onMount() {
@@ -66,7 +54,7 @@ export default class App extends DCL {
                 {
                     path: "/view/:name",
                     title: "Projectree | View Projectree",
-                    view: async () => await import("./views/ViewProjectree.js")
+                    view: async () => await import("./views/ViewPublishtree.js")
                 },
                 {
                     path: "/dashboard",
@@ -112,20 +100,13 @@ export default class App extends DCL {
 
 async function checkLoggedIn() {
     try {
-        const user = localStorage.getItem("user");
-        
-        const token = user? JSON.parse(user).token : undefined;
+        const res = await get("/auth/current-user");
 
-        if (token) {
-            setContext("loggedIn", true);
-            localStorage.setItem("loggedIn", true);
+        if (res.success) {
+            const user = res.data.user;
+            signin(user);
         } else {
-            clearContext("loggedIn");
-            clearContext("user");
-            clearContext("userEmail");
-            clearContext("userId");
-            localStorage.removeItem("loggedIn");
-            localStorage.removeItem("user");
+            signout();
         }
-    } catch (e) { }
+    } catch (err) { }
 }

@@ -6,28 +6,28 @@ function displayStandard(projectree) {
       </div>
     </header>
     <main class="${tw`container flex-grow mx-auto`}">
-        ${projectree.project_items.map(project_item => {
+        ${projectree.projectItems.map(project_item => {
         const {
-            name, description, programming_language, image, demo_link, source_code
+            name, description, languages, image, demoLink, sourceLink
         } = project_item;
         return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
             <div class="${tw`relative`}">
                 <div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
-                    <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
+                    <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" alt="" />
                 </div>
                 <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
-                    ${source_code ? `
+                    ${sourceLink ? `
                     <div class="${tw`overflow-hidden rounded-full`}">
-                    <a target="_blank" href="${source_code}">
+                    <a target="_blank" href="${sourceLink}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                         </svg>
                     </a>
                     </div>
                     ` : ""}
-                    ${demo_link ? `
+                    ${demoLink ? `
                     <div class="${tw`overflow-hidden rounded-full`}">
-                    <a target="_blank" href="${demo_link}">
+                    <a target="_blank" href="${demoLink}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                         </svg>
@@ -40,7 +40,7 @@ function displayStandard(projectree) {
                 <h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
                 <p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
                 <div class="${tw`flex flex-wrap gap-2 p-2`}">
-                    ${programming_language.split(",").map(language => {
+                    ${languages.split(",").map(language => {
             return `<span class="${tw`inline-flex items-center gap-2 rounded-full bg-blue-300 p-1 pr-2`}">
                         <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
                         <span class="${tw`text-xs`}">${language}</span>
@@ -69,28 +69,28 @@ function displayStandardRose(projectree) {
     </header>
     <main class="${tw`flex-grow bg-pink-200`}">
         <div class="${tw`mx-auto container`}">
-            ${projectree.project_items.map(project_item => {
+            ${projectree.projectItems.map(project_item => {
         const {
-            name, description, programming_language, image, demo_link, source_code
+            name, description, languages, image, demoLink, sourceLink
         } = project_item;
         return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
                 <div class="${tw`relative`}">
                     <div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
-                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
+                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" alt="" />
                     </div>
                     <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
-                        ${source_code ? `
+                        ${sourceLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${source_code}">
+                        <a target="_blank" href="${sourceLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
                         </a>
                         </div>
                         ` : ""}
-                        ${demo_link ? `
+                        ${demoLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${demo_link}">
+                        <a target="_blank" href="${demoLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
@@ -103,7 +103,7 @@ function displayStandardRose(projectree) {
                     <h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
                     <p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
                     <div class="${tw`flex flex-wrap gap-2 p-2`}">
-                        ${programming_language.split(",").map(language => {
+                        ${languages.split(",").map(language => {
             return `<span class="${tw`inline-flex items-center gap-2 rounded-full bg-pink-400 p-1 pr-2`}">
                             <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
                             <span class="${tw`text-xs`}">${language}</span>
@@ -133,28 +133,28 @@ function displayStandardGold(projectree) {
     </header>
     <main class="${tw`flex-grow bg-white`}">
         <div class="${tw`mx-auto container`}">
-            ${projectree.project_items.map(project_item => {
+            ${projectree.projectItems.map(project_item => {
         const {
-            name, description, programming_language, image, demo_link, source_code
+            name, description, languages, image, demoLink, sourceLink
         } = project_item;
         return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
                 <div class="${tw`relative`}">
                     <div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
-                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
+                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" alt="" />
                     </div>
                     <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
-                        ${source_code ? `
+                        ${sourceLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${source_code}">
+                        <a target="_blank" href="${sourceLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
                         </a>
                         </div>
                         ` : ""}
-                        ${demo_link ? `
+                        ${demoLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${demo_link}">
+                        <a target="_blank" href="${demoLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
@@ -167,7 +167,7 @@ function displayStandardGold(projectree) {
                     <h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
                     <p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
                     <div class="${tw`flex flex-wrap gap-2 p-2`}">
-                        ${programming_language.split(",").map(language => {
+                        ${languages.split(",").map(language => {
             return `<span class="${tw`inline-flex items-center gap-2 rounded-full text-white font-bold bg-yellow-400 p-1 pr-2`}">
                             <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
                             <span class="${tw`text-xs`}">${language}</span>
@@ -199,28 +199,28 @@ function displayStandardClover(projectree) {
     </header>
     <main class="${tw`flex-grow bg-green-100`}">
         <div class="${tw`mx-auto container`}">
-            ${projectree.project_items.map(project_item => {
+            ${projectree.projectItems.map(project_item => {
         const {
-            name, description, programming_language, image, demo_link, source_code
+            name, description, languages, image, demoLink, sourceLink
         } = project_item;
         return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
                 <div class="${tw`relative`}">
                     <div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
-                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
+                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" alt="" />
                     </div>
                     <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
-                        ${source_code ? `
+                        ${sourceLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${source_code}">
+                        <a target="_blank" href="${sourceLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
                         </a>
                         </div>
                         ` : ""}
-                        ${demo_link ? `
+                        ${demoLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${demo_link}">
+                        <a target="_blank" href="${demoLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
@@ -233,7 +233,7 @@ function displayStandardClover(projectree) {
                     <h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
                     <p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
                     <div class="${tw`flex flex-wrap gap-2 p-2`}">
-                        ${programming_language.split(",").map(language => {
+                        ${languages.split(",").map(language => {
             return `<span class="${tw`inline-flex items-center gap-2 rounded-full text-white font-bold bg-green-500 p-1 pr-2`}">
                             <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
                             <span class="${tw`text-xs`}">${language}</span>
@@ -263,28 +263,28 @@ function displayStandardSky(projectree) {
     </header>
     <main class="${tw`flex-grow bg-white`}">
         <div class="${tw`mx-auto container`}">
-            ${projectree.project_items.map(project_item => {
+            ${projectree.projectItems.map(project_item => {
         const {
-            name, description, programming_language, image, demo_link, source_code
+            name, description, languages, image, demoLink, sourceLink
         } = project_item;
         return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
                 <div class="${tw`relative`}">
                     <div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
-                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
+                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" alt="" />
                     </div>
                     <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
-                        ${source_code ? `
+                        ${sourceLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${source_code}">
+                        <a target="_blank" href="${sourceLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
                         </a>
                         </div>
                         ` : ""}
-                        ${demo_link ? `
+                        ${demoLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${demo_link}">
+                        <a target="_blank" href="${demoLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
@@ -297,7 +297,7 @@ function displayStandardSky(projectree) {
                     <h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
                     <p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
                     <div class="${tw`flex flex-wrap gap-2 p-2`}">
-                        ${programming_language.split(",").map(language => {
+                        ${languages.split(",").map(language => {
             return `<span class="${tw`inline-flex items-center gap-2 rounded-full text-white font-bold bg-blue-400 p-1 pr-2`}">
                             <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
                             <span class="${tw`text-xs`}">${language}</span>
@@ -327,28 +327,28 @@ function displayStandardOcean(projectree) {
     </header>
     <main class="${tw`flex-grow bg-blue-50`}">
         <div class="${tw`mx-auto container`}">
-            ${projectree.project_items.map(project_item => {
+            ${projectree.projectItems.map(project_item => {
         const {
-            name, description, programming_language, image, demo_link, source_code
+            name, description, languages, image, demoLink, sourceLink
         } = project_item;
         return `<section class="${tw`my-8 grid grid-cols-1 sm:grid-cols-2 gap-4 p-4`}">
                 <div class="${tw`relative`}">
                     <div class="${tw`flex sm:h-96 flex-1 items-center justify-center overflow-hidden rounded-xl`}">
-                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != 'assets/default_project_photo.png') this.src = 'assets/default_project_photo.png';" alt="" />
+                        <img class="${tw`w-full rounded-xl`}" src="${image}" onerror="if (this.src != '/static/images/default_project_photo.png') this.src = '/static/images/default_project_photo.png';" alt="" />
                     </div>
                     <div class="${tw`absolute bottom-0 left-0 flex flex-wrap gap-2 p-2`}">
-                        ${source_code ? `
+                        ${sourceLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${source_code}">
+                        <a target="_blank" href="${sourceLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                             </svg>
                         </a>
                         </div>
                         ` : ""}
-                        ${demo_link ? `
+                        ${demoLink ? `
                         <div class="${tw`overflow-hidden rounded-full`}">
-                        <a target="_blank" href="${demo_link}">
+                        <a target="_blank" href="${demoLink}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="${tw`h-6 w-6`}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
@@ -361,7 +361,7 @@ function displayStandardOcean(projectree) {
                     <h2 class="${tw`mb-6 text-3xl font-semibold`}">${name}</h2>
                     <p class="${tw`flex-grow whitespace-pre-line`}">${description}</p>
                     <div class="${tw`flex flex-wrap gap-2 p-2`}">
-                        ${programming_language.split(",").map(language => {
+                        ${languages.split(",").map(language => {
             return `<span class="${tw`inline-flex items-center gap-2 rounded-full text-white font-bold bg-blue-800 p-1 pr-2`}">
                             <span class="${tw`h-4 w-4 rounded-full bg-white`}"></span>
                             <span class="${tw`text-xs`}">${language}</span>
