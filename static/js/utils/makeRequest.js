@@ -159,6 +159,7 @@ function anySignal(signals, externalOnAbort) {
 }
 
 function signOut(notify = false) {
+    if (!getContext("user")) return;
     clearContext("user");
     if (!notify) return;
     alert("You have been signed out.");
