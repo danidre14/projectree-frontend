@@ -11,7 +11,7 @@ import { getContext, setContext, clearContext, navigateTo } from "../DCL/core.js
 
 
 // const baseUrl = "https://projectree-app.herokuapp.com/api/v1";
-const baseUrl = "http://127.0.0.1:3000/api/v1";
+const baseUrl = window.SERVER_URL || "http://127.0.0.1:3000/api/v1";
 
 const fetchBus = {};
 function addKeyToFetchBus(key) {
