@@ -52,17 +52,21 @@ export default class Nav extends DCL {
             :
             `
 <nav class="${tw`sticky ${hiddenText} top-0 z-30 border-b border-zinc-300 bg-zinc-50 py-4 px-4 sm:px-12 text-red-600 shadow-sm`}">
-    <div class="${tw`container mx-auto flex items-center justify-between`}">
-    <div>
-        ${await new Link(
+    <div class="${tw`container mx-auto flex items-center justify-between gap-4`}">
+        <div class="${tw`w-full`}">
+            ${await new Link(
                 `<img class="${tw`h-10 w-10`}" src="/static/images/projectree-logo-primary.png" alt="logo" />
-            <span class="${tw`hidden text-3xl font-semibold sm:inline`}">rojectree</span>`,
+                <span class="${tw`hidden text-3xl font-semibold sm:inline`}">rojectree</span>`,
                 { to: "/", class: tw`flex flex-wrap items-center` }).mount(this)}
-    </div>
-    <div class="${tw`flex flex-grow-0 flex-wrap items-center justify-end gap-2`}">
-        ${await new Link("Sign In", { to: "/signin", class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800` }).mount(this)}
-        ${await new Link("Sign Up", { to: "/signup", class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800` }).mount(this)}
-    </div>
+        </div>
+        <div class="${tw`hidden w-full flex-grow truncate font-medium text-stone-700 sm:inline`}">
+            Projectree v2 has been released
+            ${await new Link("here", { to: "https://www.projectree.net", class: tw`font-semibold underline` }).mount(this)}
+        </div>
+        <div class="${tw`flex w-full flex-grow-0 flex-wrap items-center justify-end gap-2 whitespace-nowrap`}">
+            ${await new Link("Sign In", { to: "/signin", class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800` }).mount(this)}
+            ${await new Link("Sign Up", { to: "/signup", class: tw`inline-block whitespace-nowrap rounded bg-red-400 py-2 px-5 font-bold text-zinc-50 hover:bg-red-800` }).mount(this)}
+        </div>
     </div>
 </nav>
         `;
@@ -71,16 +75,16 @@ export default class Nav extends DCL {
 
 async function attemptSignOut() {
     try {
-		const res = await get("/auth/logout");
+        const res = await get("/auth/logout");
 
-		if (res.success) {
+        if (res.success) {
             signout();
-		} else {
-			if (res.detail)
-				alert(res.detail);
-		}
-	} catch (e) {
-        if(e.name != "SyntaxError")
-		alert("Sign out failed: " + e);
-	}
+        } else {
+            if (res.detail)
+                alert(res.detail);
+        }
+    } catch (e) {
+        if (e.name != "SyntaxError")
+            alert("Sign out failed: " + e);
+    }
 }
