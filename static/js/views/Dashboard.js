@@ -6,9 +6,9 @@ export default class Dashboard extends DCL {
         super(props);
 
         this.loggedIn = !!getContext("user");
-        // if (!this.loggedIn) {
-        //     ignoreRoute();
-        // }
+        if (!this.loggedIn) {
+            ignoreRoute();
+        }
 
         this.state = {
             projectrees: [
@@ -21,7 +21,7 @@ export default class Dashboard extends DCL {
     }
 
     async onMount() {
-        // if (!this.loggedIn) return;
+        if (!this.loggedIn) return;
 
         try {
             const res = await get("/projectrees");

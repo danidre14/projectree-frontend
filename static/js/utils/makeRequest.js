@@ -124,7 +124,6 @@ const req = (url, data = {}, externalHeaders = {}, externalSignals = [], method 
 
                     if (err.message && err.message.includes("Failed to fetch")) {
                         signOut(true);
-                        console.warn({ err });
                     }
                     rej(err);
                 }
